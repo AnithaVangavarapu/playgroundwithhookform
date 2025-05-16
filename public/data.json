@@ -1,0 +1,279 @@
+{
+  "formId": "study-drug-dose",
+  "formTitle": "Study Drug Dosing Diary",
+  "showAs": "list",
+  "fields": [
+    {
+      "id": "studyDoseDate",
+      "type": "date",
+      "label": "Study Dose Date",
+      "placeholder": "Tap to select the date",
+      "deviation": { "minus": 7, "plus": 7 },
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Study Dose Date is required"
+        },
+        "lessThan": {
+          "value": "today",
+          "message": "Study Dose Date must be in the past"
+        }
+      }
+    },
+    {
+      "id": "2collayout1.2",
+      "type": "columnLayout",
+      "numberOfColumns": 2,
+      "columnWidthRatio": "1,1",
+      "items": [
+        {
+          "id": "bloodGlucose",
+          "type": "number",
+          "label": "Blood Glucose",
+          "placeholder": "eg. 45",
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Blood Glucose is required"
+            },
+            "range": {
+              "min": 10,
+              "max": 80,
+              "message": "Blood Glucose should be between 10 - 80"
+            },
+            "pattern": {
+              "pattern": "^[1-9]\\d*$",
+              "message": "Only positive whole numbers are allowed"
+            }
+          }
+        },
+        {
+          "id": "units",
+          "type": "select",
+          "label": "Units",
+          "placeholder": "Tap to select Units",
+          "options": [
+            { "value": "mg/dL", "label": "mg/dL" },
+            { "value": "mmol/L", "label": "mmol/L" }
+          ],
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Units is required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "measuredBloodGlucoseTimeAtFasting",
+      "type": "select",
+      "label": "Was Blood Glucose measured at time of fasting?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "2collayout1.3",
+      "type": "columnLayout",
+      "numberOfColumns": 2,
+      "columnWidthRatio": "1,1",
+      "items": [
+        {
+          "id": "timeOfMeal",
+          "type": "time",
+          "label": "Time of Meal",
+          "placeholder": "Tap to select time",
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Meal Time is required"
+            },
+            "lessThan": {
+              "value": "now",
+              "message": "Meal Time must be in the past"
+            }
+          }
+        },
+        {
+          "id": "picUpload",
+          "type": "fileUpload",
+          "label": "Picture of Meal",
+          "placeholder": "Tap to select",
+          "validation": {
+            "required": {
+              "value": false,
+              "message": "Picture of Meal is required"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "id": "2collayout1.5",
+      "type": "columnLayout",
+      "numberOfColumns": 2,
+      "columnWidthRatio": "1,1",
+      "items": [
+        {
+          "id": "studyDrugTaken",
+          "type": "select",
+          "label": "Was Study Drug taken?",
+          "placeholder": "Tap to select your answer",
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" }
+          ],
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Answer is required"
+            }
+          }
+        },
+        {
+          "id": "capsuleStrength",
+          "type": "select",
+          "label": "Capsule Strength",
+          "placeholder": "Tap to select Strength",
+          "options": [
+            { "value": "25", "label": "25mg" },
+            { "value": "100", "label": "100mg" }
+          ],
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Capsule Strength is required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "studyDrugTakentime",
+      "type": "time",
+      "label": "Time of Medication",
+      "placeholder": "Tap to select time",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Time of Medication is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "studyDrugTaken",
+        "condition": "equals",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "2collayout2",
+      "type": "columnLayout",
+      "numberOfColumns": 2,
+      "columnWidthRatio": "1,1",
+      "items": [
+        {
+          "id": "numberOfCapsules",
+          "type": "select",
+          "label": "Number of Capsules Taken",
+          "placeholder": "Tap to select number",
+          "options": [
+            { "value": "1", "label": "1" },
+            { "value": "2", "label": "2" },
+            { "value": "3", "label": "3" },
+            { "value": "4", "label": "4" }
+          ],
+          "readOnly": true,
+          "validation": {
+            "required": {
+              "value": true,
+              "message": "Capsule Strength is required"
+            }
+          }
+        },
+        {
+          "id": "totalDosePerDay",
+          "type": "number",
+          "label": "Total Dose per Day",
+          "placeholder": "00",
+          "readOnly": true,
+          "valuePopulateFrom": {
+            "type": "formula",
+            "formulaType": "multiply",
+            "fields": ["capsuleStrength", "numberOfCapsules"],
+            "default": "00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mealCode",
+      "type": "select",
+      "label": "Meal Code",
+      "placeholder": "Tap to select meal code",
+      "options": [
+        { "value": "per-meal/snack", "label": "Pre-Meal/Snack" },
+        { "value": "post-meal/snack", "label": "Post-Meal/Snack" },
+        { "value": "sleepingHours", "label": "Sleeping Hours" },
+        { "value": "others", "label": "Others" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Meal Code is required"
+        }
+      }
+    },
+    {
+      "id": "otherMealCode",
+      "type": "text",
+      "label": "Please Specify Other Meal Code",
+      "placeholder": "eg. example/code",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Other Meal Code is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "mealCode",
+        "condition": "equals",
+        "value": "others"
+      }
+    },
+    {
+      "id": "comments",
+      "type": "textarea",
+      "label": "Comments if any",
+      "placeholder": "Write Here...",
+      "validation": {
+        "required": {
+          "value": false,
+          "message": "Comment is required"
+        }
+      }
+    }
+  ],
+  "actions": {
+    "openForm": {
+      "alertMessage": "Blood Suger level is less than 54 mg/dL. Please complete the Hypoglycemia diary form",
+      "conditions": [
+        {
+          "field": "bloodGlucose",
+          "condition": "lessThan",
+          "value": 55
+        }
+      ],
+      "target": "hypoglycemia_dynamic_form"
+    }
+  }
+}
