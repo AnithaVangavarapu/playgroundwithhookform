@@ -1,0 +1,6 @@
+.custom-input {
+  font-size: 10px !important;
+}
+.custom-input:focus {
+  outline: none;
+}

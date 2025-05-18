@@ -1,1 +1,6 @@
 export { default as Text } from "./Text";
+export { default as TextArea } from "./TextArea";
+export { default as DropDown } from "./DropDown";
+export { default as Date } from "./Date";
+export { default as ImageUpload } from "./ImageUpload";
+export { default as Time } from "./Time/Time";

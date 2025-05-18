@@ -1,11 +1,13 @@
 import { type Validation } from "../types/types";
 export const ruleConversion = (validation: Validation) => {
+  // console.log("validation fields", validation);
   let rules: Record<string, any> = {};
+  rules.validate = {};
   const customArray = Object.entries(validation);
   if (customArray.length === 0) {
     return {};
   } else {
-    customArray.map(([key, value]) => {
+    customArray.forEach(([key, value]) => {
       if (key === "required") {
         if (value.value === true) {
           rules.required = value.message;
@@ -13,20 +15,28 @@ export const ruleConversion = (validation: Validation) => {
       }
 
       if (key === "lessThan") {
+        // console.log("===lessThan key found, value:", value.value);
+        // console.log("=== message", value.message);
         if (value.value === "today") {
           const currentDate = new Date();
-
-          rules.lessThan = {
-            value: currentDate,
-            message: value.message,
+          rules.validate = {
+            ...(rules.validate || {}),
+            lessThanDate: (val: Date) => {
+              const comparingValue = new Date(val);
+              return comparingValue < currentDate || value.message;
+            },
           };
         }
         if (value.value === "now") {
-          const currentDate = new Date();
-          const currentTime = currentDate.toLocaleTimeString;
-          rules.lessThan = {
-            value: currentTime,
-            message: value.message,
+          const currentTime = new Date().getTime();
+
+          rules.validate = {
+            ...(rules.validate || {}),
+            lessThanTime: (val: Date) => {
+              const comparingValue = new Date(val).getTime();
+
+              return comparingValue < currentTime || value.message;
+            },
           };
         }
       }
@@ -37,13 +47,18 @@ export const ruleConversion = (validation: Validation) => {
         };
       }
       if (key === "range") {
-        rules.range = {
-          min: value.min,
-          max: value.max,
-          message: value.message,
+        rules.validate = {
+          ...(rules.validate || {}),
+          inRange: (val: string | number) => {
+            if (Number(val) < value.min || Number(val) > value.max) {
+              return value.message;
+            }
+            return true;
+          },
         };
       }
     });
   }
+  // console.log("rules which are returning", rules);
   return rules;
 };

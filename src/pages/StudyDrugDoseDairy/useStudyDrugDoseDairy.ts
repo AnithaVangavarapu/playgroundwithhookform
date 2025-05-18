@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import { type FormFieldProp, type FormActions } from "../../types/types";
 import { useState, useEffect } from "react";
 interface FormDataProps {
@@ -13,6 +13,8 @@ export const useStudyDrugDoseDairy = () => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
+    watch,
   } = useForm<Record<string, any>>();
   const [formData, setFormData] = useState<FormDataProps | null>(null);
   const [title, setTitle] = useState<string>("");
@@ -35,5 +37,18 @@ export const useStudyDrugDoseDairy = () => {
   const handleFormSubmit = async (data: Record<string, any>) => {
     console.log(data);
   };
-  return { register, handleSubmit, title, fields, handleFormSubmit, errors };
+  const handleFormError = (errors: FieldErrors) => {
+    console.log(" Validation errors:", errors);
+  };
+  return {
+    register,
+    handleSubmit,
+    title,
+    fields,
+    handleFormSubmit,
+    errors,
+    control,
+    watch,
+    handleFormError,
+  };
 };

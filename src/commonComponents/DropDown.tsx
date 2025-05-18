@@ -8,43 +8,44 @@ import {
   type RegisterOptions,
   type UseFormRegister,
 } from "react-hook-form";
-
 import { ruleConversion } from "../utils/ruleConversion";
 interface ClassNames {
   div?: string;
-  input?: string;
   label?: string;
   error?: string;
+  select?: string;
+}
+interface Option {
+  value: string;
+  label: string;
 }
 interface Props<T extends FieldValues> {
+  options: Option[];
   label?: string;
-  error?: FieldError;
-  name: Path<T>;
-  register: UseFormRegister<T>;
-  validation?: Validation;
-  classnames?: ClassNames;
   placeholder?: string;
-  readonly?: boolean;
+  register: UseFormRegister<T>;
+  classnames?: ClassNames;
+  error?: FieldError;
+  validation?: Validation;
+
+  name: Path<T>;
   visible?: boolean;
-  value?: string;
 }
-const Text = <T extends FieldValues>({
+const DropDown = <T extends FieldValues>({
   label,
   error,
+  options,
   name,
   register,
   classnames,
   placeholder,
-  readonly,
   validation,
   visible,
-  value,
 }: Props<T>) => {
-  // console.log("validation field in the text", validation);
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
     ? ruleConversion(validation)
     : undefined;
-  // console.log("rules in th text", rules);
+  // console.log("rules in the dropdown", rules);
   return (
     <div className={twMerge(clsx(`m-1`, classnames?.div))} hidden={visible}>
       {label && (
@@ -56,19 +57,22 @@ const Text = <T extends FieldValues>({
           {`${label}${rules?.required ? "*" : ""}`}
         </label>
       )}
-      <input
-        {...register(name, rules)}
+      <select
         className={twMerge(
           clsx(
-            `border w-full rounded-lg border-gray-200 p-1.5 text-[10px] focus:outline-none`,
-            classnames?.input
+            `w-full border border-gray-200 rounded-lg p-1.5 text-[10px] text-gray-400 focus:outline-none`,
+            classnames?.select
           )
         )}
-        placeholder={placeholder}
-        readOnly={readonly}
-        type="text"
-        value={value}
-      />
+        {...register(name, rules)}
+      >
+        {placeholder && <option value="">{placeholder}</option>}
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
       {error && (
         <p
           className={twMerge(
@@ -82,4 +86,4 @@ const Text = <T extends FieldValues>({
   );
 };
 
-export default Text;
+export default DropDown;

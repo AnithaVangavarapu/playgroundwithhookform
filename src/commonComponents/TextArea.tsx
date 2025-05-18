@@ -8,27 +8,28 @@ import {
   type RegisterOptions,
   type UseFormRegister,
 } from "react-hook-form";
-
 import { ruleConversion } from "../utils/ruleConversion";
+
 interface ClassNames {
   div?: string;
-  input?: string;
+  textArea?: string;
   label?: string;
   error?: string;
 }
+
 interface Props<T extends FieldValues> {
   label?: string;
   error?: FieldError;
   name: Path<T>;
   register: UseFormRegister<T>;
-  validation?: Validation;
   classnames?: ClassNames;
-  placeholder?: string;
   readonly?: boolean;
+  validation?: Validation;
   visible?: boolean;
-  value?: string;
+  placeholder?: string;
 }
-const Text = <T extends FieldValues>({
+
+const TextArea = <T extends FieldValues>({
   label,
   error,
   name,
@@ -38,13 +39,12 @@ const Text = <T extends FieldValues>({
   readonly,
   validation,
   visible,
-  value,
 }: Props<T>) => {
-  // console.log("validation field in the text", validation);
+  // console.log("validation field in the textarea", validation);
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
     ? ruleConversion(validation)
     : undefined;
-  // console.log("rules in th text", rules);
+  // console.log("rules in the textarea", rules);
   return (
     <div className={twMerge(clsx(`m-1`, classnames?.div))} hidden={visible}>
       {label && (
@@ -56,18 +56,16 @@ const Text = <T extends FieldValues>({
           {`${label}${rules?.required ? "*" : ""}`}
         </label>
       )}
-      <input
+      <textarea
         {...register(name, rules)}
         className={twMerge(
           clsx(
             `border w-full rounded-lg border-gray-200 p-1.5 text-[10px] focus:outline-none`,
-            classnames?.input
+            classnames?.textArea
           )
         )}
         placeholder={placeholder}
         readOnly={readonly}
-        type="text"
-        value={value}
       />
       {error && (
         <p
@@ -82,4 +80,4 @@ const Text = <T extends FieldValues>({
   );
 };
 
-export default Text;
+export default TextArea;
