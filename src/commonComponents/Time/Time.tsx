@@ -19,7 +19,6 @@ interface Props<T extends FieldValues> {
   error?: FieldError;
   control: Control<T>;
   placeholder?: string;
-  visible?: boolean;
   readonly?: boolean;
   validation?: Validation;
   name: Path<T>;
@@ -31,7 +30,7 @@ const Time = <T extends FieldValues>({
   validation,
   name,
   control,
-  visible,
+
   readonly,
 }: Props<T>) => {
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
@@ -39,12 +38,15 @@ const Time = <T extends FieldValues>({
     : undefined;
   // console.log("rules in time", rules);
   return (
-    <div className={twMerge(clsx("m-1"))} hidden={visible}>
+    <div className={twMerge(clsx("m-1"))}>
       {label && (
         <label
           className={twMerge(clsx(`text-[12px] text-gray-500  font-medium`))}
         >
-          {`${label}${rules?.required ? "*" : ""}`}
+          {label}
+          <span className="text-red-400">{`${
+            rules?.required ? " *" : ""
+          }`}</span>
         </label>
       )}
       <Controller

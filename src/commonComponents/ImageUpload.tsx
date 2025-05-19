@@ -54,9 +54,10 @@ const ImageUpload = <T extends FieldValues>({
   };
   return (
     <div className={twMerge(clsx("mx-1 mt-3"))}>
-      <div className="text-[12px] text-gray-500  font-medium">{`${label}${
-        rules?.required ? "*" : ""
-      }`}</div>
+      <div className="text-[12px] text-gray-500  font-medium">
+        {label}
+        <span className="text-red-400">{`${rules?.required ? " *" : ""}`}</span>
+      </div>
       <Controller
         control={control}
         name={name}
@@ -74,7 +75,7 @@ const ImageUpload = <T extends FieldValues>({
               <button
                 type="button"
                 onClick={handleUpload}
-                className="flex items-center gap-2 text-gray-400"
+                className="flex items-center gap-2 text-gray-400 cursor-pointer"
                 disabled={readonly}
               >
                 <Upload width={15} color="gray" />

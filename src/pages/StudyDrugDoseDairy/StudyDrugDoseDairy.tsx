@@ -13,6 +13,7 @@ const StudyDrugDoseDairy = React.memo(() => {
     control,
     watch,
     handleFormError,
+    setValue,
   } = useStudyDrugDoseDairy();
 
   return (
@@ -33,6 +34,7 @@ const StudyDrugDoseDairy = React.memo(() => {
                   control={control}
                   errors={errors}
                   watch={watch}
+                  setValue={setValue}
                 />
               }
             </div>

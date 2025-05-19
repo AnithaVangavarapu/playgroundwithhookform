@@ -27,7 +27,6 @@ interface Props<T extends FieldValues> {
   validation?: Validation;
   readonly?: boolean;
   classnames?: ClassNames;
-  visible?: boolean;
 }
 const Date = <T extends FieldValues>({
   control,
@@ -38,30 +37,29 @@ const Date = <T extends FieldValues>({
   validation,
   readonly,
   classnames,
-  visible,
 }: Props<T>) => {
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
     ? ruleConversion(validation)
     : undefined;
   // console.log("rules in date ", rules);
   return (
-    <div
-      className={twMerge(clsx(`m-1`, classnames?.outerdiv))}
-      hidden={visible}
-    >
+    <div className={twMerge(clsx(`m-1`, classnames?.outerdiv))}>
       {label && (
         <label
           className={twMerge(
             clsx(`text-[12px] text-gray-500  font-medium`, classnames?.label)
           )}
         >
-          {`${label}${rules?.required ? "*" : ""}`}
+          {label}
+          <span className="text-red-400">{`${
+            rules?.required ? " *" : ""
+          }`}</span>
         </label>
       )}
       <div
         className={twMerge(
           clsx(
-            `flex border border-gray-200 justify-between items-center rounded-lg `,
+            `flex border border-gray-200 justify-between items-center rounded-lg p-1`,
             classnames?.innerdiv
           )
         )}

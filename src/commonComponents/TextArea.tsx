@@ -25,7 +25,7 @@ interface Props<T extends FieldValues> {
   classnames?: ClassNames;
   readonly?: boolean;
   validation?: Validation;
-  visible?: boolean;
+
   placeholder?: string;
 }
 
@@ -38,7 +38,6 @@ const TextArea = <T extends FieldValues>({
   placeholder,
   readonly,
   validation,
-  visible,
 }: Props<T>) => {
   // console.log("validation field in the textarea", validation);
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
@@ -46,14 +45,17 @@ const TextArea = <T extends FieldValues>({
     : undefined;
   // console.log("rules in the textarea", rules);
   return (
-    <div className={twMerge(clsx(`m-1`, classnames?.div))} hidden={visible}>
+    <div className={twMerge(clsx(`m-1`, classnames?.div))}>
       {label && (
         <label
           className={twMerge(
             clsx(`text-[12px] text-gray-500  font-medium`, classnames?.label)
           )}
         >
-          {`${label}${rules?.required ? "*" : ""}`}
+          {label}
+          <span className="text-red-400">{`${
+            rules?.required ? " *" : ""
+          }`}</span>
         </label>
       )}
       <textarea

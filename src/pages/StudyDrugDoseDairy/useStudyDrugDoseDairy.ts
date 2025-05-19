@@ -15,10 +15,15 @@ export const useStudyDrugDoseDairy = () => {
     formState: { errors },
     control,
     watch,
-  } = useForm<Record<string, any>>();
+    setValue,
+  } = useForm<Record<string, any>>({
+    shouldUnregister: true,
+  });
   const [formData, setFormData] = useState<FormDataProps | null>(null);
   const [title, setTitle] = useState<string>("");
   const [fields, setFields] = useState<FormFieldProp[]>([]);
+
+  //fetch data
   useEffect(() => {
     fetch("/data.json")
       .then((res) => res.json())
@@ -28,18 +33,27 @@ export const useStudyDrugDoseDairy = () => {
         setFormData(null);
       });
   }, []);
+
+  //set title and fields when fetched data changes
   useEffect(() => {
     if (formData !== null) {
       setTitle(formData?.formTitle);
       setFields(formData?.fields);
     }
   }, [formData]);
+
+  //submit form
   const handleFormSubmit = async (data: Record<string, any>) => {
     console.log(data);
+    alert("submitted");
   };
+
+  //display errors in console while submits
   const handleFormError = (errors: FieldErrors) => {
     console.log(" Validation errors:", errors);
+    alert("errors");
   };
+
   return {
     register,
     handleSubmit,
@@ -50,5 +64,6 @@ export const useStudyDrugDoseDairy = () => {
     control,
     watch,
     handleFormError,
+    setValue,
   };
 };

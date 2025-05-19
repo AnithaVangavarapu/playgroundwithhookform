@@ -8,6 +8,8 @@ import {
   type Path,
   type FieldErrors,
   type UseFormWatch,
+  type UseFormSetValue,
+  type PathValue,
 } from "react-hook-form";
 import {
   type ColumnLayoutFiled,
@@ -28,6 +30,7 @@ import {
   TextArea,
   Time,
 } from "../commonComponents";
+import { useEffect } from "react";
 
 interface Props<T extends FieldValues> {
   field: FormFieldProp;
@@ -36,6 +39,7 @@ interface Props<T extends FieldValues> {
   error?: FieldError;
   errors: FieldErrors<T>;
   watch: UseFormWatch<T>;
+  setValue: UseFormSetValue<T>;
 }
 
 const RenderField = <T extends FieldValues>({
@@ -45,19 +49,40 @@ const RenderField = <T extends FieldValues>({
   error,
   errors,
   watch,
+  setValue,
 }: Props<T>) => {
   const type: string = field.type;
   console.log("field that rerenders", field.id);
-  // const formStateData = watch();
-  // const visibilityFieldId = field.visibilityDependsOn?.field;
-  // const watchedValue = visibilityFieldId
-  //   ? watch(visibilityFieldId as Path<T>)
-  //   : undefined;
-  // const isVisible = field.visibilityDependsOn
-  //   ? visibilityCheck(field.visibilityDependsOn, {
-  //       [visibilityFieldId as string]: watchedValue,
-  //     })
-  //   : true;
+
+  useEffect(() => {
+    if (field.type === "number") {
+      const numberField = field as NumberField;
+      if (numberField.valuePopulateFrom) {
+        const newvalue = numberField.valuePopulateFrom
+          ? populateForm(
+              numberField.valuePopulateFrom,
+              Object.fromEntries(
+                numberField.valuePopulateFrom.fields.map((f) => [
+                  f,
+                  watch(f as Path<T>),
+                ])
+              )
+            )
+          : undefined;
+        if (newvalue !== undefined) {
+          setValue(
+            numberField.id as Path<T>,
+            newvalue as PathValue<T, Path<T>>
+          );
+        }
+      }
+    }
+  }, [
+    ...(field.type === "number" && field.valuePopulateFrom
+      ? field.valuePopulateFrom.fields.map((f) => watch(f as Path<T>))
+      : []),
+  ]);
+
   const renderedField = () => {
     switch (type) {
       case "date":
@@ -70,7 +95,7 @@ const RenderField = <T extends FieldValues>({
             placeholder={DatePickerField.placeholder}
             error={error}
             validation={DatePickerField.validation}
-            readonly={DatePickerField.readOnly === true}
+            readonly={DatePickerField.readOnly}
           />
         );
 
@@ -97,6 +122,7 @@ const RenderField = <T extends FieldValues>({
                   register={register}
                   errors={errors}
                   watch={watch}
+                  setValue={setValue}
                 />
               </div>
             ))}
@@ -111,20 +137,7 @@ const RenderField = <T extends FieldValues>({
             label={numberField.label}
             placeholder={numberField.placeholder}
             error={error}
-            readonly={numberField.readOnly === true}
-            value={
-              numberField.valuePopulateFrom
-                ? populateForm(
-                    numberField.valuePopulateFrom,
-                    Object.fromEntries(
-                      numberField.valuePopulateFrom.fields.map((f) => [
-                        f,
-                        watch(f as Path<T>),
-                      ])
-                    )
-                  )
-                : undefined
-            }
+            readonly={numberField.readOnly}
             validation={numberField.validation}
           />
         );
@@ -142,27 +155,30 @@ const RenderField = <T extends FieldValues>({
           />
         );
 
-      case "time":
+      case "time": {
         const timeField = field as TimeField;
+        const visible =
+          timeField.visibilityDependsOn &&
+          visibilityCheck(timeField.visibilityDependsOn, {
+            [timeField.visibilityDependsOn.field]: watch(
+              timeField.visibilityDependsOn.field as Path<T>
+            ),
+          });
+
         return (
-          <Time
-            control={control}
-            name={timeField.id as Path<T>}
-            label={timeField.label}
-            placeholder={timeField.placeholder}
-            error={error}
-            visible={
-              timeField.visibilityDependsOn &&
-              visibilityCheck(timeField.visibilityDependsOn, {
-                [timeField.visibilityDependsOn.field]: watch(
-                  timeField.visibilityDependsOn.field as Path<T>
-                ),
-              })
-            }
-            readonly={timeField.readOnly === true}
-            validation={timeField.validation}
-          />
+          !visible && (
+            <Time
+              control={control}
+              name={timeField.id as Path<T>}
+              label={timeField.label}
+              placeholder={timeField.placeholder}
+              error={error}
+              readonly={timeField.readOnly}
+              validation={timeField.validation}
+            />
+          )
         );
+      }
       case "fileUpload":
         const fileUploadField = field as FileUploadField;
         return (
@@ -172,30 +188,31 @@ const RenderField = <T extends FieldValues>({
             label={fileUploadField.label}
             placeholder={fileUploadField.placeholder}
             error={error}
-            readonly={fileUploadField.readOnly === true}
+            readonly={fileUploadField.readOnly}
             validation={fileUploadField.validation}
           />
         );
       case "text":
         const textField = field as TextField;
+        const visible =
+          textField.visibilityDependsOn &&
+          visibilityCheck(textField.visibilityDependsOn, {
+            [textField.visibilityDependsOn.field]: watch(
+              textField.visibilityDependsOn.field as Path<T>
+            ),
+          });
         return (
-          <Text
-            register={register}
-            name={textField.id as Path<T>}
-            label={textField.label}
-            placeholder={textField.placeholder}
-            error={error}
-            readonly={textField.readOnly === true}
-            visible={
-              textField.visibilityDependsOn &&
-              visibilityCheck(textField.visibilityDependsOn, {
-                [textField.visibilityDependsOn.field]: watch(
-                  textField.visibilityDependsOn.field as Path<T>
-                ),
-              })
-            }
-            validation={textField.validation}
-          />
+          !visible && (
+            <Text
+              register={register}
+              name={textField.id as Path<T>}
+              label={textField.label}
+              placeholder={textField.placeholder}
+              error={error}
+              readonly={textField.readOnly}
+              validation={textField.validation}
+            />
+          )
         );
       case "textarea":
         const textareaField = field as TextAreaField;
@@ -206,7 +223,7 @@ const RenderField = <T extends FieldValues>({
             label={textareaField.label}
             placeholder={textareaField.placeholder}
             error={error}
-            readonly={textareaField.readOnly === true}
+            readonly={textareaField.readOnly}
             validation={textareaField.validation}
           />
         );

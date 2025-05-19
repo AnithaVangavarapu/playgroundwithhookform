@@ -27,9 +27,7 @@ interface Props<T extends FieldValues> {
   classnames?: ClassNames;
   error?: FieldError;
   validation?: Validation;
-
   name: Path<T>;
-  visible?: boolean;
 }
 const DropDown = <T extends FieldValues>({
   label,
@@ -40,21 +38,23 @@ const DropDown = <T extends FieldValues>({
   classnames,
   placeholder,
   validation,
-  visible,
 }: Props<T>) => {
   const rules: RegisterOptions<T, Path<T>> | undefined = validation
     ? ruleConversion(validation)
     : undefined;
   // console.log("rules in the dropdown", rules);
   return (
-    <div className={twMerge(clsx(`m-1`, classnames?.div))} hidden={visible}>
+    <div className={twMerge(clsx(`m-1`, classnames?.div))}>
       {label && (
         <label
           className={twMerge(
             clsx(`text-[12px] text-gray-500  font-medium`, classnames?.label)
           )}
         >
-          {`${label}${rules?.required ? "*" : ""}`}
+          {label}
+          <span className="text-red-400">{`${
+            rules?.required ? " *" : ""
+          }`}</span>
         </label>
       )}
       <select
