@@ -1,5 +1,5 @@
 import { useStudyDrugDoseDairy } from "./useStudyDrugDoseDairy";
-import RenderField from "../../utils/RenderField";
+import FieldItem from "../../utils/FieldItem";
 import React from "react";
 import type { FieldError } from "react-hook-form";
 const StudyDrugDoseDairy = React.memo(() => {
@@ -27,7 +27,7 @@ const StudyDrugDoseDairy = React.memo(() => {
           return (
             <div key={field.id}>
               {
-                <RenderField<Record<string, any>>
+                <FieldItem<Record<string, any>>
                   field={field}
                   error={errors[field.id] as FieldError}
                   register={register}

@@ -68,6 +68,7 @@ const TextArea = <T extends FieldValues>({
         )}
         placeholder={placeholder}
         readOnly={readonly}
+        rows={4}
       />
       {error && (
         <p

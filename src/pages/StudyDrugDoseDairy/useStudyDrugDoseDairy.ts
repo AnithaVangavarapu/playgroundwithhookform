@@ -45,13 +45,13 @@ export const useStudyDrugDoseDairy = () => {
   //submit form
   const handleFormSubmit = async (data: Record<string, any>) => {
     console.log(data);
-    alert("submitted");
+    // alert("submitted");
   };
 
   //display errors in console while submits
   const handleFormError = (errors: FieldErrors) => {
     console.log(" Validation errors:", errors);
-    alert("errors");
+    // alert("errors");
   };
 
   return {
