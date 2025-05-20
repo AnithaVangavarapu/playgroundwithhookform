@@ -45,7 +45,7 @@ const FieldItem = <T extends FieldValues>({
   error,
   setValue,
 }: Props<T>) => {
-  console.log("rendering field", field.id);
+  // console.log("rendering field", field.id);
   const type: string = field.type;
 
   //watch value for visibility field
@@ -59,10 +59,11 @@ const FieldItem = <T extends FieldValues>({
   const showItem = useMemo(() => {
     if (field.visibilityDependsOn) {
       if (watchedValue) {
-        const visible = visibilityCheck(
-          field.visibilityDependsOn,
-          watchedValue
-        );
+        const visible = visibilityCheck({
+          action: field.visibilityDependsOn.condition,
+          value: field.visibilityDependsOn.value,
+          fieldValue: watchedValue,
+        });
         return visible;
       }
     } else {
@@ -98,6 +99,7 @@ const FieldItem = <T extends FieldValues>({
 
   const renderedField = () => {
     if (showItem) {
+      console.log("rendering field", field.id);
       switch (type) {
         case "date":
           const DatePickerField = field as DateField;
