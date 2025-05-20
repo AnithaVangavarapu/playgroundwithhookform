@@ -2,6 +2,7 @@ import { useStudyDrugDoseDairy } from "./useStudyDrugDoseDairy";
 import FieldItem from "../../utils/FieldItem";
 import React from "react";
 import type { FieldError } from "react-hook-form";
+import { type ColumnLayoutFiled } from "../../types/types";
 const StudyDrugDoseDairy = React.memo(() => {
   const {
     title,
@@ -11,7 +12,6 @@ const StudyDrugDoseDairy = React.memo(() => {
     handleFormSubmit,
     errors,
     control,
-    watch,
     handleFormError,
     setValue,
   } = useStudyDrugDoseDairy();
@@ -24,21 +24,49 @@ const StudyDrugDoseDairy = React.memo(() => {
         onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
       >
         {fields.map((field) => {
-          return (
-            <div key={field.id}>
-              {
-                <FieldItem<Record<string, any>>
-                  field={field}
-                  error={errors[field.id] as FieldError}
-                  register={register}
-                  control={control}
-                  errors={errors}
-                  watch={watch}
-                  setValue={setValue}
-                />
-              }
-            </div>
-          );
+          if (field.type === "columnLayout") {
+            const columnLayoutField = field as ColumnLayoutFiled;
+            const columnsWidths = columnLayoutField.columnWidthRatio
+              .split(",")
+              .map((part) => `${part.trim()}fr`)
+              .join(" ");
+
+            return (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: columnsWidths,
+                }}
+                key={field.id}
+              >
+                {columnLayoutField.items.map((item) => (
+                  <div key={item.id} className="">
+                    <FieldItem
+                      field={item}
+                      error={errors[item.id] as FieldError}
+                      control={control}
+                      register={register}
+                      setValue={setValue}
+                    />
+                  </div>
+                ))}
+              </div>
+            );
+          } else {
+            return (
+              <div key={field.id}>
+                {
+                  <FieldItem
+                    field={field}
+                    error={errors[field.id] as FieldError}
+                    register={register}
+                    control={control}
+                    setValue={setValue}
+                  />
+                }
+              </div>
+            );
+          }
         })}
         <div className="text-center">
           <button

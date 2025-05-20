@@ -1,6 +1,6 @@
 import { useForm, type FieldErrors } from "react-hook-form";
 import { type FormFieldProp, type FormActions } from "../../types/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 interface FormDataProps {
   formId: string;
   formTitle: string;
@@ -20,9 +20,6 @@ export const useStudyDrugDoseDairy = () => {
     shouldUnregister: true,
   });
   const [formData, setFormData] = useState<FormDataProps | null>(null);
-  const [title, setTitle] = useState<string>("");
-  const [fields, setFields] = useState<FormFieldProp[]>([]);
-
   //fetch data
   useEffect(() => {
     fetch("/data.json")
@@ -34,17 +31,15 @@ export const useStudyDrugDoseDairy = () => {
       });
   }, []);
 
-  //set title and fields when fetched data changes
-  useEffect(() => {
-    if (formData !== null) {
-      setTitle(formData?.formTitle);
-      setFields(formData?.fields);
-    }
+  //memorized fields
+  const memorizedFields = useMemo(() => {
+    return formData?.fields ?? [];
   }, [formData]);
 
   //submit form
   const handleFormSubmit = async (data: Record<string, any>) => {
     console.log(data);
+
     // alert("submitted");
   };
 
@@ -57,8 +52,8 @@ export const useStudyDrugDoseDairy = () => {
   return {
     register,
     handleSubmit,
-    title,
-    fields,
+    title: formData?.formTitle ?? "",
+    fields: memorizedFields,
     handleFormSubmit,
     errors,
     control,

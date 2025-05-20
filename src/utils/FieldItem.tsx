@@ -1,18 +1,16 @@
 import { visibilityCheck } from "./visibilityCheck";
-import { populateForm } from "./populateForm";
+import { populateFrom } from "./populateFrom";
 import {
   type Control,
   type FieldError,
   type FieldValues,
   type UseFormRegister,
   type Path,
-  type FieldErrors,
-  type UseFormWatch,
   type UseFormSetValue,
   type PathValue,
+  useWatch,
 } from "react-hook-form";
 import {
-  type ColumnLayoutFiled,
   type FormFieldProp,
   type NumberField,
   type DateField,
@@ -30,15 +28,13 @@ import {
   TextArea,
   Time,
 } from "../commonComponents";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 interface Props<T extends FieldValues> {
   field: FormFieldProp;
   control: Control<T>;
   register: UseFormRegister<T>;
   error?: FieldError;
-  errors: FieldErrors<T>;
-  watch: UseFormWatch<T>;
   setValue: UseFormSetValue<T>;
 }
 
@@ -47,65 +43,61 @@ const FieldItem = <T extends FieldValues>({
   control,
   register,
   error,
-  errors,
-  watch,
   setValue,
 }: Props<T>) => {
   console.log("rendering field", field.id);
-  const [renderField, setRenderField] = useState<boolean>(false);
   const type: string = field.type;
-  useEffect(() => {
-    if (!field.visibilityDependsOn) {
-      setRenderField(true);
-    }
-  }, [field.id]);
 
-  const watchValue = field.visibilityDependsOn
-    ? watch(field.visibilityDependsOn.field as Path<T>)
+  //watch value for visibility field
+  const watchedValue = field.visibilityDependsOn
+    ? useWatch({
+        control,
+        name: field.visibilityDependsOn.field as Path<T>,
+      })
     : undefined;
-
-  useEffect(() => {
-    if (watchValue) {
-      const visible = field.visibilityDependsOn
-        ? visibilityCheck(field.visibilityDependsOn, watchValue)
-        : undefined;
-      if (visible) {
-        setRenderField(visible);
+  //check to render item
+  const showItem = useMemo(() => {
+    if (field.visibilityDependsOn) {
+      if (watchedValue) {
+        const visible = visibilityCheck(
+          field.visibilityDependsOn,
+          watchedValue
+        );
+        return visible;
       }
+    } else {
+      return true;
     }
-  }, [watchValue]);
+  }, [watchedValue]);
 
-  // useEffect(() => {
-  //   if (field.type === "number") {
-  //     const numberField = field as NumberField;
-  //     if (numberField.valuePopulateFrom) {
-  //       const newvalue = numberField.valuePopulateFrom
-  //         ? populateForm(
-  //             numberField.valuePopulateFrom,
-  //             Object.fromEntries(
-  //               numberField.valuePopulateFrom.fields.map((f) => [
-  //                 f,
-  //                 watch(f as Path<T>),
-  //               ])
-  //             )
-  //           )
-  //         : undefined;
-  //       if (newvalue !== undefined) {
-  //         setValue(
-  //           numberField.id as Path<T>,
-  //           newvalue as PathValue<T, Path<T>>
-  //         );
-  //       }
-  //     }
-  //   }
-  // }, [
-  //   ...(field.type === "number" && field.valuePopulateFrom
-  //     ? field.valuePopulateFrom.fields.map((f) => watch(f as Path<T>))
-  //     : []),
-  // ]);
+  const isNumberField = field.type === "number" && field.valuePopulateFrom;
+  //watching populate form values
+  const watchedPopulateValues = isNumberField
+    ? useWatch({
+        control,
+        name: field.valuePopulateFrom!.fields as Path<T>[],
+      })
+    : undefined;
+  //calculate autopupulate value when watchedPopulatValues changes
+  const newvalue = useMemo(() => {
+    if (isNumberField && watchedPopulateValues) {
+      const value = populateFrom(
+        field.valuePopulateFrom!,
+        watchedPopulateValues
+      );
+
+      return value;
+    }
+    return undefined;
+  }, [watchedPopulateValues, isNumberField, field]);
+
+  //setting populate vlaue for item when newvalue changes
+  useEffect(() => {
+    setValue(field.id as Path<T>, newvalue as PathValue<T, Path<T>>);
+  }, [newvalue]);
 
   const renderedField = () => {
-    if (renderField) {
+    if (showItem) {
       switch (type) {
         case "date":
           const DatePickerField = field as DateField;
@@ -121,37 +113,9 @@ const FieldItem = <T extends FieldValues>({
             />
           );
 
-        case "columnLayout":
-          const columnLayoutField = field as ColumnLayoutFiled;
-          const columnsWidths = columnLayoutField.columnWidthRatio
-            .split(",")
-            .map((part) => `${part.trim()}fr`)
-            .join(" ");
-
-          return (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: columnsWidths,
-              }}
-            >
-              {columnLayoutField.items.map((item) => (
-                <div key={item.id} className="">
-                  <FieldItem
-                    field={item}
-                    error={errors[item.id] as FieldError}
-                    control={control}
-                    register={register}
-                    errors={errors}
-                    watch={watch}
-                    setValue={setValue}
-                  />
-                </div>
-              ))}
-            </div>
-          );
         case "number":
           const numberField = field as NumberField;
+
           return (
             <Text
               register={register}
@@ -179,13 +143,6 @@ const FieldItem = <T extends FieldValues>({
 
         case "time":
           const timeField = field as TimeField;
-          // const visible =
-          //   timeField.visibilityDependsOn &&
-          // visibilityCheck(timeField.visibilityDependsOn, {
-          //   [timeField.visibilityDependsOn.field]: watch(
-          //     timeField.visibilityDependsOn.field as Path<T>
-          //   ),
-          // });
 
           return (
             <Time
@@ -214,13 +171,6 @@ const FieldItem = <T extends FieldValues>({
           );
         case "text":
           const textField = field as TextField;
-          // const visible =
-          //   textField.visibilityDependsOn &&
-          //   visibilityCheck(textField.visibilityDependsOn, {
-          //     [textField.visibilityDependsOn.field]: watch(
-          //       textField.visibilityDependsOn.field as Path<T>
-          //     ),
-          //   });
           return (
             <Text
               register={register}
@@ -255,4 +205,4 @@ const FieldItem = <T extends FieldValues>({
 
   return <>{renderedField()}</>;
 };
-export default FieldItem;
+export default React.memo(FieldItem);

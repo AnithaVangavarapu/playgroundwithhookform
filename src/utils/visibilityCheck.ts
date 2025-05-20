@@ -7,12 +7,23 @@ export const visibilityCheck = (
   // const field = condition.field;
   const action = condition.condition;
   const value = condition.value;
+  // console.log("fieldValue", fieldValue);
+  const fieldvalue = fieldValue;
+
+  // console.log(
+  //   "typeof value",
+  //   typeof value,
+  //   "typeof fieldvalue",
+  //   fieldvalue,
+  //   "fieldvalue",
+  //   fieldvalue
+  // );
 
   switch (action) {
     case "equals":
-      return fieldValue === value;
+      return fieldvalue === value;
     case "notEquals":
-      return fieldValue !== value;
+      return fieldvalue !== value;
     case "lessThan":
       return Number(fieldValue) < Number(value);
     case "greaterThan":
