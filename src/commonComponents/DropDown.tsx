@@ -1,14 +1,4 @@
-import clsx from "clsx";
-import { twMerge } from "tw-merge";
-import { type Validation } from "../types/types";
-import {
-  type FieldError,
-  type FieldValues,
-  type Path,
-  type RegisterOptions,
-  type UseFormRegister,
-} from "react-hook-form";
-import { ruleConversion } from "../utils/ruleConversion";
+import { cn } from "../utils/cn";
 interface ClassNames {
   div?: string;
   label?: string;
@@ -19,52 +9,50 @@ interface Option {
   value: string;
   label: string;
 }
-interface Props<T extends FieldValues> {
+interface Props {
   options: Option[];
   label?: string;
   placeholder?: string;
-  register: UseFormRegister<T>;
+  onChange: (val: string) => void;
   classnames?: ClassNames;
-  error?: FieldError;
-  validation?: Validation;
-  name: Path<T>;
+  error?: string;
+  required?: boolean;
+  name: string;
 }
-const DropDown = <T extends FieldValues>({
+const DropDown = ({
   label,
   error,
   options,
   name,
-  register,
+  onChange,
+  required,
   classnames,
   placeholder,
-  validation,
-}: Props<T>) => {
-  const rules: RegisterOptions<T, Path<T>> | undefined = validation
-    ? ruleConversion(validation)
-    : undefined;
+}: Props) => {
+  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
+  //   ? ruleConversion(validation)
+  //   : undefined;
   // console.log("rules in the dropdown", rules);
   return (
-    <div className={twMerge(clsx(`m-1`, classnames?.div))}>
+    <div className={cn(`m-1`, classnames?.div)}>
       {label && (
         <label
-          className={twMerge(
-            clsx(`text-[12px] text-gray-500  font-medium`, classnames?.label)
+          className={cn(
+            `text-[12px] text-gray-500  font-medium`,
+            classnames?.label
           )}
         >
           {label}
-          <span className="text-red-400">{`${
-            rules?.required ? " *" : ""
-          }`}</span>
+          {required && <span className="text-red-400">*</span>}
         </label>
       )}
       <select
-        className={twMerge(
-          clsx(
-            `w-full border border-gray-200 rounded-lg p-1.5 text-[10px] text-gray-400 focus:outline-none`,
-            classnames?.select
-          )
+        className={cn(
+          `w-full border border-gray-200 rounded-lg p-1.5 text-[10px] text-gray-400 focus:outline-none`,
+          classnames?.select
         )}
-        {...register(name, rules)}
+        onChange={(e) => onChange(e.target.value)}
+        name={name}
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
@@ -74,12 +62,8 @@ const DropDown = <T extends FieldValues>({
         ))}
       </select>
       {error && (
-        <p
-          className={twMerge(
-            clsx(`text-red-400 text-[10px]`, classnames?.error)
-          )}
-        >
-          {error.message}
+        <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>
+          {error}
         </p>
       )}
     </div>

@@ -1,24 +1,23 @@
 import { cn } from "../utils/cn";
+
 interface ClassNames {
   div?: string;
-  textArea?: string;
+  input?: string;
   label?: string;
   error?: string;
 }
-
 interface Props {
   label?: string;
   error?: string;
   name: string;
   onChange: (val: string) => void;
-  classnames?: ClassNames;
-  readonly?: boolean;
   required?: boolean;
-
+  classnames?: ClassNames;
   placeholder?: string;
+  readonly?: boolean;
+  value?: string;
 }
-
-const TextArea = ({
+const TextInput = ({
   label,
   error,
   name,
@@ -27,12 +26,8 @@ const TextArea = ({
   placeholder,
   readonly,
   required,
+  value,
 }: Props) => {
-  // console.log("validation field in the textarea", validation);
-  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
-  //   ? ruleConversion(validation)
-  //   : undefined;
-  // console.log("rules in the textarea", rules);
   return (
     <div className={cn(`m-1`, classnames?.div)}>
       {label && (
@@ -43,19 +38,20 @@ const TextArea = ({
           )}
         >
           {label}
-          {required && <span className="text-red-400">*</span>}
+          {required && <span className="text-red-400"> *</span>}
         </label>
       )}
-      <textarea
+      <input
         name={name}
         className={cn(
           `border w-full rounded-lg border-gray-200 p-1.5 text-[10px] focus:outline-none`,
-          classnames?.textArea
+          classnames?.input
         )}
         placeholder={placeholder}
         readOnly={readonly}
-        rows={4}
+        type="text"
         onChange={(e) => onChange(e.target.value)}
+        value={value}
       />
       {error && (
         <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>
@@ -65,5 +61,4 @@ const TextArea = ({
     </div>
   );
 };
-
-export default TextArea;
+export default TextInput;

@@ -9,16 +9,10 @@ interface FormDataProps {
   actions?: FormActions;
 }
 export const useStudyDrugDoseDairy = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    watch,
-    setValue,
-  } = useForm<Record<string, any>>({
+  const methods = useForm<Record<string, any>>({
     shouldUnregister: true,
   });
+
   const [formData, setFormData] = useState<FormDataProps | null>(null);
   //fetch data
   useEffect(() => {
@@ -50,15 +44,10 @@ export const useStudyDrugDoseDairy = () => {
   };
 
   return {
-    register,
-    handleSubmit,
+    methods,
     title: formData?.formTitle ?? "",
     fields: memorizedFields,
     handleFormSubmit,
-    errors,
-    control,
-    watch,
     handleFormError,
-    setValue,
   };
 };

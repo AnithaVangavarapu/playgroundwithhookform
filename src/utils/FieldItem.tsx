@@ -1,14 +1,9 @@
-import { visibilityCheck } from "./visibilityCheck";
 import { populateFrom } from "./populateFrom";
 import {
-  type Control,
-  type FieldError,
-  type FieldValues,
-  type UseFormRegister,
-  type Path,
-  type UseFormSetValue,
-  type PathValue,
   useWatch,
+  useController,
+  useFormContext,
+  useFormState,
 } from "react-hook-form";
 import {
   type FormFieldProp,
@@ -24,187 +19,152 @@ import {
   Date,
   DropDown,
   ImageUpload,
-  Text,
+  TextInput,
   TextArea,
   Time,
 } from "../commonComponents";
 import React, { useEffect, useMemo } from "react";
-
-interface Props<T extends FieldValues> {
-  field: FormFieldProp;
-  control: Control<T>;
-  register: UseFormRegister<T>;
-  error?: FieldError;
-  setValue: UseFormSetValue<T>;
+import { ruleConversion } from "./ruleConversion";
+import { DateObject } from "react-multi-date-picker";
+interface Props {
+  fieldItem: FormFieldProp;
 }
 
-const FieldItem = <T extends FieldValues>({
-  field,
-  control,
-  register,
-  error,
-  setValue,
-}: Props<T>) => {
-  // console.log("rendering field", field.id);
-  const type: string = field.type;
+const FieldItem = ({ fieldItem }: Props) => {
+  console.log("render item", fieldItem.id);
+  const type: string = fieldItem.type;
+  const { control, setValue } = useFormContext();
+  const { field } = useController({
+    name: fieldItem.id,
+    control,
+    rules: fieldItem.validation && ruleConversion(fieldItem.validation),
+  });
+  const { errors } = useFormState();
+  const isNumberField =
+    fieldItem.type === "number" && fieldItem.valuePopulateFrom;
 
-  //watch value for visibility field
-  const watchedValue = field.visibilityDependsOn
-    ? useWatch({
-        control,
-        name: field.visibilityDependsOn.field as Path<T>,
-      })
-    : undefined;
-  //check to render item
-  const showItem = useMemo(() => {
-    if (field.visibilityDependsOn) {
-      if (watchedValue) {
-        const visible = visibilityCheck({
-          action: field.visibilityDependsOn.condition,
-          value: field.visibilityDependsOn.value,
-          fieldValue: watchedValue,
-        });
-        return visible;
-      }
-    } else {
-      return true;
-    }
-  }, [watchedValue]);
-
-  const isNumberField = field.type === "number" && field.valuePopulateFrom;
   //watching populate form values
   const watchedPopulateValues = isNumberField
     ? useWatch({
         control,
-        name: field.valuePopulateFrom!.fields as Path<T>[],
+        name: fieldItem.valuePopulateFrom!.fields,
       })
     : undefined;
+
   //calculate autopupulate value when watchedPopulatValues changes
   const newvalue = useMemo(() => {
     if (isNumberField && watchedPopulateValues) {
       const value = populateFrom(
-        field.valuePopulateFrom!,
+        fieldItem.valuePopulateFrom!,
         watchedPopulateValues
       );
-
       return value;
     }
     return undefined;
-  }, [watchedPopulateValues, isNumberField, field]);
+  }, [watchedPopulateValues, isNumberField, fieldItem]);
 
-  //setting populate vlaue for item when newvalue changes
+  // setting populate vlaue for item when newvalue changes
   useEffect(() => {
-    setValue(field.id as Path<T>, newvalue as PathValue<T, Path<T>>);
+    setValue(field.name, newvalue);
   }, [newvalue]);
 
-  const renderedField = () => {
-    if (showItem) {
-      console.log("rendering field", field.id);
-      switch (type) {
-        case "date":
-          const DatePickerField = field as DateField;
-          return (
-            <Date
-              control={control}
-              name={DatePickerField.id as Path<T>}
-              label={DatePickerField.label}
-              placeholder={DatePickerField.placeholder}
-              error={error}
-              validation={DatePickerField.validation}
-              readonly={DatePickerField.readOnly}
-            />
-          );
+  switch (type) {
+    case "date":
+      const DatePickerField = fieldItem as DateField;
+      return (
+        <Date
+          onChange={field.onChange}
+          name={field.name}
+          label={DatePickerField.label}
+          placeholder={DatePickerField.placeholder}
+          error={errors[DatePickerField.id]?.message as string}
+          readonly={DatePickerField.readOnly}
+          value={field.value ? new DateObject(field.value) : null}
+        />
+      );
 
-        case "number":
-          const numberField = field as NumberField;
+    case "number":
+      const numberField = fieldItem as NumberField;
+      return (
+        <TextInput
+          onChange={field.onChange}
+          name={numberField.id}
+          label={numberField.label}
+          placeholder={numberField.placeholder}
+          error={errors[numberField.id]?.message as string}
+          readonly={numberField.readOnly}
+          value={field.value || ""}
+        />
+      );
+    case "select":
+      const selectField = fieldItem as SelectField;
+      return (
+        <DropDown
+          options={selectField.options}
+          label={selectField.label}
+          onChange={field.onChange}
+          name={field.name}
+          placeholder={selectField.placeholder}
+          error={errors[selectField.id]?.message as string}
+        />
+      );
 
-          return (
-            <Text
-              register={register}
-              name={numberField.id as Path<T>}
-              label={numberField.label}
-              placeholder={numberField.placeholder}
-              error={error}
-              readonly={numberField.readOnly}
-              validation={numberField.validation}
-            />
-          );
-        case "select":
-          const selectField = field as SelectField;
-          return (
-            <DropDown
-              options={selectField.options}
-              label={selectField.label}
-              register={register}
-              name={selectField.id as Path<T>}
-              placeholder={selectField.placeholder}
-              error={error}
-              validation={selectField.validation}
-            />
-          );
+    case "time":
+      const timeField = fieldItem as TimeField;
 
-        case "time":
-          const timeField = field as TimeField;
+      return (
+        <Time
+          onChange={field.onChange}
+          name={field.name}
+          label={timeField.label}
+          placeholder={timeField.placeholder}
+          error={errors[timeField.id]?.message as string}
+          readonly={timeField.readOnly}
+        />
+      );
 
-          return (
-            <Time
-              control={control}
-              name={timeField.id as Path<T>}
-              label={timeField.label}
-              placeholder={timeField.placeholder}
-              error={error}
-              readonly={timeField.readOnly}
-              validation={timeField.validation}
-            />
-          );
-
-        case "fileUpload":
-          const fileUploadField = field as FileUploadField;
-          return (
-            <ImageUpload
-              control={control}
-              name={fileUploadField.id as Path<T>}
-              label={fileUploadField.label}
-              placeholder={fileUploadField.placeholder}
-              error={error}
-              readonly={fileUploadField.readOnly}
-              validation={fileUploadField.validation}
-            />
-          );
-        case "text":
-          const textField = field as TextField;
-          return (
-            <Text
-              register={register}
-              name={textField.id as Path<T>}
-              label={textField.label}
-              placeholder={textField.placeholder}
-              error={error}
-              readonly={textField.readOnly}
-              validation={textField.validation}
-            />
-          );
-        case "textarea":
-          const textareaField = field as TextAreaField;
-          return (
-            <TextArea
-              register={register}
-              name={textareaField.id as Path<T>}
-              label={textareaField.label}
-              placeholder={textareaField.placeholder}
-              error={error}
-              readonly={textareaField.readOnly}
-              validation={textareaField.validation}
-            />
-          );
-        default:
-          return null;
-      }
-    } else {
-      null;
-    }
-  };
-
-  return <>{renderedField()}</>;
+    case "fileUpload":
+      const fileUploadField = fieldItem as FileUploadField;
+      return (
+        <ImageUpload
+          onChange={field.onChange}
+          name={fileUploadField.id}
+          label={fileUploadField.label}
+          placeholder={fileUploadField.placeholder}
+          error={errors[fileUploadField.id]?.message as string}
+          readonly={fileUploadField.readOnly}
+        />
+      );
+    case "text":
+      const textField = fieldItem as TextField;
+      return (
+        <TextInput
+          onChange={field.onChange}
+          name={field.name}
+          label={textField.label}
+          placeholder={textField.placeholder}
+          error={errors[textField.id]?.message as string}
+          // readonly={textField.readOnly}
+          // classnames={{
+          //   label: "text-red-500",
+          // }}
+          // value={field.value ?? ""}
+        />
+      );
+    case "textarea":
+      const textareaField = fieldItem as TextAreaField;
+      return (
+        <TextArea
+          onChange={field.onChange}
+          name={field.name}
+          label={textareaField.label}
+          placeholder={textareaField.placeholder}
+          error={errors[textareaField.id]?.message as string}
+          readonly={textareaField.readOnly}
+        />
+      );
+    default:
+      return null;
+  }
 };
 export default React.memo(FieldItem);

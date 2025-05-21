@@ -1,82 +1,59 @@
-import clsx from "clsx";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
-import { twMerge } from "tw-merge";
 import { Clock } from "lucide-react";
 import "./time.css";
-import { type Validation } from "../../types/types";
-import {
-  type FieldError,
-  type FieldValues,
-  type Path,
-  type RegisterOptions,
-  type Control,
-  Controller,
-} from "react-hook-form";
-import { ruleConversion } from "../../utils/ruleConversion";
-interface Props<T extends FieldValues> {
+
+import { cn } from "../../utils/cn";
+interface Props {
   label?: string;
-  error?: FieldError;
-  control: Control<T>;
+  error?: string;
+  onChange: (val: Date | undefined) => void;
   placeholder?: string;
   readonly?: boolean;
-  validation?: Validation;
-  name: Path<T>;
+  required?: boolean;
+  name: string;
 }
-const Time = <T extends FieldValues>({
+const Time = ({
   label,
   error,
   placeholder,
-  validation,
-  name,
-  control,
-
   readonly,
-}: Props<T>) => {
-  const rules: RegisterOptions<T, Path<T>> | undefined = validation
-    ? ruleConversion(validation)
-    : undefined;
+  name,
+  required,
+  onChange,
+}: Props) => {
+  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
+  //   ? ruleConversion(validation)
+  //   : undefined;
   // console.log("rules in time", rules);
   return (
-    <div className={twMerge(clsx("m-1"))}>
+    <div className={cn("m-1")}>
       {label && (
-        <label
-          className={twMerge(clsx(`text-[12px] text-gray-500  font-medium`))}
-        >
+        <label className={cn(`text-[12px] text-gray-500  font-medium`)}>
           {label}
-          <span className="text-red-400">{`${
-            rules?.required ? " *" : ""
-          }`}</span>
+          {required && <span className="text-red-400">*</span>}
         </label>
       )}
-      <Controller
-        name={name}
-        rules={rules}
-        control={control}
-        render={({ field }) => (
-          <div className="flex border justify-between p-1 rounded-lg border-gray-200">
-            <DatePicker
-              disableDayPicker
-              format="hh:mm A"
-              plugins={[<TimePicker hideSeconds />]}
-              placeholder={placeholder}
-              onChange={(date: DateObject | null) => {
-                field.onChange(date?.toDate());
-              }}
-              value={field.value ? new DateObject(field.value) : null}
-              inputClass="custom-input"
-              readOnly={readonly}
-              editable={false}
-            />
-            <Clock width={15} color="gray" />
-          </div>
-        )}
-      />
-      {error && (
-        <p className={twMerge(clsx(`text-[10px] text-red-400`))}>
-          {error.message}
-        </p>
-      )}
+
+      <div className="flex border justify-between p-1 rounded-lg border-gray-200">
+        <DatePicker
+          disableDayPicker
+          format="hh:mm A"
+          plugins={[<TimePicker hideSeconds />]}
+          placeholder={placeholder}
+          onChange={(date: DateObject | null) => {
+            onChange(date?.toDate());
+          }}
+          // value={field.value ? new DateObject(field.value) : null}
+          inputClass="custom-input"
+          readOnly={readonly}
+          editable={false}
+          name={name}
+        />
+        <Clock width={15} color="gray" />
+      </div>
+
+      {error && <p className={cn(`text-[10px] text-red-400`)}>{error}</p>}
     </div>
   );
 };
