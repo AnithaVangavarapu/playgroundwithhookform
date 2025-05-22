@@ -2,7 +2,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import { Clock } from "lucide-react";
 import "./time.css";
-
+import React from "react";
 import { cn } from "../../utils/cn";
 interface Props {
   label?: string;
@@ -58,4 +58,4 @@ const Time = ({
   );
 };
 
-export default Time;
+export default React.memo(Time);

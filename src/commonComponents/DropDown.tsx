@@ -1,4 +1,5 @@
 import { cn } from "../utils/cn";
+import React from "react";
 interface ClassNames {
   div?: string;
   label?: string;
@@ -70,4 +71,4 @@ const DropDown = ({
   );
 };
 
-export default DropDown;
+export default React.memo(DropDown);

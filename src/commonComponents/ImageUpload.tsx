@@ -119,4 +119,4 @@ const ImageUpload = ({
   );
 };
 
-export default ImageUpload;
+export default React.memo(ImageUpload);

@@ -1,5 +1,5 @@
 import { cn } from "../utils/cn";
-
+import React, { useRef, useState, useEffect } from "react";
 interface ClassNames {
   div?: string;
   input?: string;
@@ -28,6 +28,24 @@ const TextInput = ({
   required,
   value,
 }: Props) => {
+  const [internalValue, setInternalValue] = useState(value || "");
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setInternalValue(value || "");
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
+      onChange(newValue);
+    }, 1000);
+  };
   return (
     <div className={cn(`m-1`, classnames?.div)}>
       {label && (
@@ -50,8 +68,8 @@ const TextInput = ({
         placeholder={placeholder}
         readOnly={readonly}
         type="text"
-        onChange={(e) => onChange(e.target.value)}
-        value={value}
+        onChange={handleChange}
+        value={internalValue}
       />
       {error && (
         <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>
@@ -61,4 +79,4 @@ const TextInput = ({
     </div>
   );
 };
-export default TextInput;
+export default React.memo(TextInput);

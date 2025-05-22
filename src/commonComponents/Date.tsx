@@ -1,6 +1,7 @@
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import "./Time/time.css";
 import { cn } from "../utils/cn";
+import React from "react";
 
 interface ClassNames {
   outerdiv?: string;
@@ -63,4 +64,4 @@ const Date = ({
   );
 };
 
-export default Date;
+export default React.memo(Date);

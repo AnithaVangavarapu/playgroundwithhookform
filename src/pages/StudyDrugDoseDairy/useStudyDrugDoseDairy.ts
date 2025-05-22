@@ -33,7 +33,6 @@ export const useStudyDrugDoseDairy = () => {
   //submit form
   const handleFormSubmit = async (data: Record<string, any>) => {
     console.log(data);
-
     // alert("submitted");
   };
 

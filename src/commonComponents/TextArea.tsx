@@ -1,11 +1,11 @@
 import { cn } from "../utils/cn";
+import React, { useRef, useState, useEffect } from "react";
 interface ClassNames {
   div?: string;
   textArea?: string;
   label?: string;
   error?: string;
 }
-
 interface Props {
   label?: string;
   error?: string;
@@ -14,8 +14,8 @@ interface Props {
   classnames?: ClassNames;
   readonly?: boolean;
   required?: boolean;
-
   placeholder?: string;
+  value?: string;
 }
 
 const TextArea = ({
@@ -27,12 +27,26 @@ const TextArea = ({
   placeholder,
   readonly,
   required,
+  value,
 }: Props) => {
-  // console.log("validation field in the textarea", validation);
-  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
-  //   ? ruleConversion(validation)
-  //   : undefined;
-  // console.log("rules in the textarea", rules);
+  const [internalValue, setInternalValue] = useState(value || "");
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    setInternalValue(value || "");
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
+      onChange(newValue);
+    }, 500);
+  };
   return (
     <div className={cn(`m-1`, classnames?.div)}>
       {label && (
@@ -55,7 +69,8 @@ const TextArea = ({
         placeholder={placeholder}
         readOnly={readonly}
         rows={4}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        value={internalValue}
       />
       {error && (
         <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>
@@ -66,4 +81,4 @@ const TextArea = ({
   );
 };
 
-export default TextArea;
+export default React.memo(TextArea);

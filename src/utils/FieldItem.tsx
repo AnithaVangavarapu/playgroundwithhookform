@@ -23,7 +23,7 @@ import {
   TextArea,
   Time,
 } from "../commonComponents";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { ruleConversion } from "./ruleConversion";
 import { DateObject } from "react-multi-date-picker";
 interface Props {
@@ -31,7 +31,7 @@ interface Props {
 }
 
 const FieldItem = ({ fieldItem }: Props) => {
-  console.log("render item", fieldItem.id);
+  console.log("render item", fieldItem.id, fieldItem.type);
   const type: string = fieldItem.type;
   const { control, setValue } = useFormContext();
   const { field } = useController({
@@ -40,6 +40,7 @@ const FieldItem = ({ fieldItem }: Props) => {
     rules: fieldItem.validation && ruleConversion(fieldItem.validation),
   });
   const { errors } = useFormState();
+
   const isNumberField =
     fieldItem.type === "number" && fieldItem.valuePopulateFrom;
 
@@ -63,22 +64,23 @@ const FieldItem = ({ fieldItem }: Props) => {
     return undefined;
   }, [watchedPopulateValues, isNumberField, fieldItem]);
 
-  // setting populate vlaue for item when newvalue changes
-  useEffect(() => {
+  const fieldvalue = isNumberField && useWatch({ control, name: field.name });
+
+  if (isNumberField && newvalue !== undefined && fieldvalue !== newvalue) {
     setValue(field.name, newvalue);
-  }, [newvalue]);
+  }
 
   switch (type) {
     case "date":
-      const DatePickerField = fieldItem as DateField;
+      const datePickerField = fieldItem as DateField;
       return (
         <Date
           onChange={field.onChange}
           name={field.name}
-          label={DatePickerField.label}
-          placeholder={DatePickerField.placeholder}
-          error={errors[DatePickerField.id]?.message as string}
-          readonly={DatePickerField.readOnly}
+          label={datePickerField.label}
+          placeholder={datePickerField.placeholder}
+          error={errors[datePickerField.id]?.message as string}
+          readonly={datePickerField.readOnly}
           value={field.value ? new DateObject(field.value) : null}
         />
       );
@@ -111,7 +113,6 @@ const FieldItem = ({ fieldItem }: Props) => {
 
     case "time":
       const timeField = fieldItem as TimeField;
-
       return (
         <Time
           onChange={field.onChange}
@@ -144,11 +145,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           label={textField.label}
           placeholder={textField.placeholder}
           error={errors[textField.id]?.message as string}
-          // readonly={textField.readOnly}
-          // classnames={{
-          //   label: "text-red-500",
-          // }}
-          // value={field.value ?? ""}
+          value={field.value || ""}
         />
       );
     case "textarea":
