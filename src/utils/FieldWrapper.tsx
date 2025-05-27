@@ -1,6 +1,7 @@
 import { useFieldVisibility } from "../customHooks/useFieldVisibility";
 import FieldItem from "./FieldItem";
 import type { FormFieldProp } from "../types/types";
+import React from "react";
 const FieldWrapper = ({ fieldItem }: { fieldItem: FormFieldProp }) => {
   const isvisible = useFieldVisibility(fieldItem);
   if (!isvisible) return null;
@@ -11,4 +12,4 @@ const FieldWrapper = ({ fieldItem }: { fieldItem: FormFieldProp }) => {
   );
 };
 
-export default FieldWrapper;
+export default React.memo(FieldWrapper);

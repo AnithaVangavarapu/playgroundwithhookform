@@ -11,10 +11,7 @@ const StudyDrugDoseDairy = React.memo(() => {
     <div className="mx-40 p-4">
       <div className="mb-3 font-bold">{title}</div>
       <FormProvider {...methods}>
-        <form
-          className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm"
-          onSubmit={methods.handleSubmit(handleFormSubmit, handleFormError)}
-        >
+        <div className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm">
           {fields.map((field) => {
             if (field.type === "columnLayout") {
               const columnLayoutField = field as ColumnLayoutFiled;
@@ -48,11 +45,15 @@ const StudyDrugDoseDairy = React.memo(() => {
             <button
               className="border rounded-lg p-1 text-[10px] w-15 font-medium bg-blue-950 text-white border-blue-950 cursor-pointer"
               type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                methods.handleSubmit(handleFormSubmit, handleFormError)();
+              }}
             >
               Submit
             </button>
           </div>
-        </form>
+        </div>
       </FormProvider>
     </div>
   );

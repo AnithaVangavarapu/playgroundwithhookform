@@ -3,6 +3,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useMemo } from "react";
 import { visibilityCheck } from "../utils/visibilityCheck";
 export const useFieldVisibility = (fieldItem: FormFieldProp) => {
+  if(!fieldItem.visibilityDependsOn) return true;
   const { control } = useFormContext();
   //watch value for visibility field
   const watchedValue = fieldItem.visibilityDependsOn
@@ -23,9 +24,7 @@ export const useFieldVisibility = (fieldItem: FormFieldProp) => {
 
         return visible;
       }
-    } else {
-      return true;
-    }
+    } 
   }, [watchedValue]);
   return showItem;
 };

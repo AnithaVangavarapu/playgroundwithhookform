@@ -9,9 +9,7 @@ interface FormDataProps {
   actions?: FormActions;
 }
 export const useStudyDrugDoseDairy = () => {
-  const methods = useForm<Record<string, any>>({
-    shouldUnregister: true,
-  });
+  const methods = useForm<Record<string, any>>();
 
   const [formData, setFormData] = useState<FormDataProps | null>(null);
   //fetch data
@@ -31,7 +29,7 @@ export const useStudyDrugDoseDairy = () => {
   }, [formData]);
 
   //submit form
-  const handleFormSubmit = async (data: Record<string, any>) => {
+  const handleFormSubmit = (data: Record<string, any>) => {
     console.log(data);
     // alert("submitted");
   };
