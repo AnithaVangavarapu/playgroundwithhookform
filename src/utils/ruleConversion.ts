@@ -49,11 +49,22 @@ export const ruleConversion = (validation: Validation) => {
       if (key === "range") {
         rules.validate = {
           ...(rules.validate || {}),
-          inRange: (val: string | number) => {
-            if (Number(val) < value.min || Number(val) > value.max) {
-              return value.message;
+          inRange: (val: string | number | Date) => {
+            const isDate = typeof value.min === "string";
+            if (isDate) {
+              const inputValue = new Date(val);
+              const minDate = new Date(value.min);
+              const maxDate = new Date(value.max);
+              if (inputValue < minDate || inputValue > maxDate) {
+                return value.message;
+              }
+              return true;
+            } else {
+              if (Number(val) < value.min || Number(val) > value.max) {
+                return value.message;
+              }
+              return true;
             }
-            return true;
           },
         };
       }

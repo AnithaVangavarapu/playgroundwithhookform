@@ -7,8 +7,8 @@ export interface RequiredValidation {
   message: boolean;
 }
 export interface RangeValidation {
-  min: number;
-  max: number;
+  min: number | string;
+  max: number | string;
   message: string;
 }
 export interface PatternValidation {
@@ -84,7 +84,10 @@ export interface NumberField extends BaseField {
 export interface FileUploadField extends BaseField {
   type: "fileUpload";
 }
-
+export interface CheckboxField extends BaseField {
+  type: "checkbox";
+  options: SelectOption[];
+}
 export type FormFieldProp =
   | DateField
   | TimeField
@@ -107,4 +110,12 @@ export interface ActionOpenForm {
 }
 export interface FormActions {
   openForm?: ActionOpenForm;
+}
+
+export interface FormDataProps {
+  formId: string;
+  formTitle: string;
+  showAs: string;
+  fields: FormFieldProp[];
+  actions?: FormActions;
 }

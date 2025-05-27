@@ -1,0 +1,324 @@
+{
+  "formId": "hypoglycemia",
+  "formTitle": "Hypoglycemia Dairy",
+  "showAs": "list",
+  "fields": [
+    {
+      "id": "hypoglycemicEventStartDate",
+      "type": "date",
+      "label": "Start Date of Hypoglycemic Event",
+      "placeholder": "Tap to select the date",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Hypoglycemic Event Start Date is required"
+        },
+        "lessThan": {
+          "value": "today",
+          "message": "Hypoglycemic Event Start Date must be in the past"
+        },
+        "range": {
+          "min": "2025-03-11",
+          "max": "2025-03-13",
+          "message": "Date should between 11 - 13 March"
+        }
+      }
+    },
+    {
+      "id": "startTime",
+      "type": "time",
+      "label": "Start Time",
+      "placeholder": "Tap to select time",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Start Time is required"
+        }
+      }
+    },
+    {
+      "id": "endTime",
+      "type": "time",
+      "label": "End Time",
+      "placeholder": "Tap to select time",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "End Time is required"
+        }
+      }
+    },
+    {
+      "id": "bloodGlucose",
+      "type": "number",
+      "label": "Blood Glucose",
+      "placeholder": "eg. 45",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Blood Glucode is required"
+        }
+      }
+    },
+    {
+      "id": "units",
+      "type": "select",
+      "label": "Units",
+      "placeholder": "Tap to select Units",
+      "options": [
+        { "value": "mg/dL", "label": "mg/dL" },
+        { "value": "mmol/L", "label": "mmol/L" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Units is required"
+        }
+      }
+    },
+    {
+      "id": "bloodGlucoseMeasurementSource",
+      "type": "select",
+      "label": "What was the source of Blood Glucose measurement?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "cgm", "label": "CGM" },
+        { "value": "insulinPump", "label": "Insulin Pump" },
+        {
+          "value": "gluctometer/fingurePrick",
+          "label": "Gluctometer/ Fingure Prick"
+        }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "anySymptoms",
+      "type": "select",
+      "label": "Do you have any symptoms?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "lossOfConsciousness",
+      "type": "select",
+      "label": "Do you have any loss of consciousness?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "resultInSeizure",
+      "type": "select",
+      "label": "Did this episod result in seizure?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "requiredAssistance",
+      "type": "select",
+      "label": "Did you require any assistance since you were unable to treat yourself?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "contactedSite",
+      "type": "select",
+      "label": "if Subject required assistance,did you contact site?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "sameDay", "label": "Site Contacted Same Day" },
+        { "value": "differentDay", "label": "Site Contacted Different Day" },
+        { "value": "notContacted", "label": "Site was not Contacted" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "requiredAssistance",
+        "condition": "equals",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "asleepWhenBegan",
+      "type": "select",
+      "label": "Were you asleep when the episode began?",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "hypoglycemiaNocturnal",
+      "type": "select",
+      "label": "If Yes, was the hypoglycemia nocturnal? (10 PM to 06 AM)",
+      "placeholder": "Tap to select your answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "no", "label": "No" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "asleepWhenBegan",
+        "condition": "equals",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "specificCircumstances",
+      "type": "checkbox",
+      "label": "Specify circumstances which may have lead to the episode? (Check all the apply)",
+      "placeholder": "Select Options",
+      "options": [
+        { "value": "1", "label": "Skipped meal or Change in food intake" },
+        {
+          "value": "2",
+          "label": "Delay in meal after taking meal time insulin"
+        },
+        { "value": "3", "label": "Unusual physical activity" },
+        { "value": "4", "label": "Alcohol consumption" },
+        { "value": "5", "label": "Wrong dosing of insulin" },
+        { "value": "6", "label": "Insulin pen (Injection device) malfunction" },
+        { "value": "7", "label": "Insulin pump malfunction" },
+        { "value": "8", "label": "Unknown" },
+        { "value": "9", "label": "Other" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "otherCircumstances",
+      "type": "text",
+      "label": "If other circumstances, specify",
+      "placeholder": "eg. write here...",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Other circumstances is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "specificCircumstances",
+        "condition": "equals",
+        "value": "9"
+      }
+    },
+    {
+      "id": "treatWith",
+      "type": "checkbox",
+      "label": "what did you treat with? (Check all the apply)",
+      "placeholder": "Select Options",
+      "options": [
+        { "value": "1", "label": "Intravenous glucose" },
+        {
+          "value": "2",
+          "label": "Oral or buccal or glucose-containing food/drink"
+        },
+        { "value": "3", "label": "Glucagon" },
+        { "value": "4", "label": "None" },
+        { "value": "5", "label": "Other" }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Any answer is required"
+        }
+      }
+    },
+    {
+      "id": "otherTreatment",
+      "type": "text",
+      "label": "If other treatment, specify",
+      "placeholder": "eg. write here...",
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Other treatment is required"
+        }
+      },
+      "visibilityDependsOn": {
+        "field": "treatWith",
+        "condition": "equals",
+        "value": "5"
+      }
+    },
+    {
+      "id": "resolvedWithTreatment",
+      "type": "select",
+      "label": "Did the event improve/resolve with treatment",
+      "placeholder": "Tap to select answer",
+      "options": [
+        { "value": "yes", "label": "Yes" },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
+      "validation": {
+        "required": {
+          "value": true,
+          "message": "Resolution due to treatment is required"
+        }
+      }
+    }
+  ]
+}

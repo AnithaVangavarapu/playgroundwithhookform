@@ -1,21 +1,12 @@
-import { useStudyDrugDoseDairy } from "./useStudyDrugDoseDairy";
+import { useHypoglycemiaDiary } from "./useHypoglycemiaDiary";
 import React from "react";
 import { type ColumnLayoutFiled } from "../../types/types";
 import { FormProvider } from "react-hook-form";
 import FieldWrapper from "../../utils/FieldWrapper";
 import { Button } from "../../commonComponents";
-import ConfirmModal from "../../components/ConfirmModal";
-const StudyDrugDoseDairy = React.memo(() => {
-  const {
-    title,
-    fields,
-    methods,
-    handleFormSubmit,
-    handleFormError,
-    showModal,
-    modalData,
-    handleNavigation,
-  } = useStudyDrugDoseDairy();
+const HypoglycemiaDiary = React.memo(() => {
+  const { title, fields, methods, handleFormSubmit, handleFormError } =
+    useHypoglycemiaDiary();
 
   return (
     <div className="mx-40 p-4">
@@ -51,7 +42,6 @@ const StudyDrugDoseDairy = React.memo(() => {
               );
             }
           })}
-
           <Button
             label="Submit"
             type="submit"
@@ -62,14 +52,8 @@ const StudyDrugDoseDairy = React.memo(() => {
           />
         </div>
       </FormProvider>
-      {showModal && (
-        <ConfirmModal
-          message={modalData}
-          handleConfirmation={handleNavigation}
-        />
-      )}
     </div>
   );
 });
 
-export default StudyDrugDoseDairy;
+export default HypoglycemiaDiary;

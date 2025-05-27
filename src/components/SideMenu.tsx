@@ -1,86 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, BookText } from "lucide-react";
 
 const SideMenu = () => {
-  const [activeLink, setActiveLink] = useState<string>("studyDrugDoseDiary");
+  const location = useLocation();
+  const links = [
+    {
+      to: "/studyDrugDoseDiary",
+      label: "Study Drug Dose Diary",
+      matchPaths: ["/", "/studyDrugDoseDiary"],
+    },
+    { to: "/insulineDiary", label: "Insuline Diary" },
+    { to: "/hypoglycemiaDiary", label: "Hypoglycemia Diary" },
+    { to: "/dynamicForm", label: "Dynamic Form" },
+    { to: "/sf36", label: "SF-36" },
+  ];
+  console.log(location.pathname);
   return (
     <div className="text-[10px] font-medium">
-      <Link
-        to={"/studyDrugDoseDiary"}
-        className={`p-2  border-b border-gray-200 grid grid-cols-8 items-center ${
-          activeLink.match("studyDrugDoseDiary") && "bg-gray-100"
-        }`}
-        onClick={() => setActiveLink("studyDrugDoseDiary")}
-      >
-        <BookText width={15} color="gray" className=" col-span-1" />
-        <p className="col-span-6">Study Drug Dose Diary</p>
-        <ChevronRight
-          width={12}
-          color="gray"
-          className="col-span-1 justify-self-end"
-        />
-      </Link>
-      <Link
-        to={"/insulineDiary"}
-        className={`p-2 grid grid-cols-8 items-center border-b border-gray-200 ${
-          activeLink.match("insulineDiary") && "bg-gray-100"
-        }`}
-        onClick={() => setActiveLink("insulineDiary")}
-      >
-        <BookText width={15} color="gray" className="col-span-1" />
-        <p className="col-span-6">Insuline Diary</p>
-        <ChevronRight
-          width={12}
-          color="gray"
-          className="col-span-1 justify-self-end"
-        />
-      </Link>
-      <Link
-        to={"/hypoglycemiaDiary"}
-        className={`p-2 grid grid-cols-8 items-center border-b border-gray-200 ${
-          activeLink.match("hypoglycemiaDiary") && "bg-gray-100"
-        }`}
-        onClick={() => setActiveLink("hypoglycemiaDiary")}
-      >
-        <BookText width={15} color="gray" className="col-span-1" />
-        <p className="col-span-6">Hypoglycemia Diary</p>
-        <ChevronRight
-          width={12}
-          color="gray"
-          className="col-span-1 justify-self-end"
-        />
-      </Link>
-      <Link
-        to={"/dynamicForm"}
-        className={`p-2 grid grid-cols-8 items-center  border-b border-gray-200 ${
-          activeLink.match("dynamicForm") && "bg-gray-100"
-        }`}
-        onClick={() => setActiveLink("dynamicForm")}
-      >
-        <BookText width={15} color="gray" className="col-span-1" />
-        <p className="col-span-6">Dynamic Form</p>
-        <ChevronRight
-          width={12}
-          color="gray"
-          className="col-span-1 justify-self-end"
-        />
-      </Link>
-      <Link
-        to={"/sf36"}
-        className={`p-2 grid grid-cols-8 items-center  border-b border-gray-200 ${
-          activeLink.match("sf36") && "bg-gray-100"
-        }`}
-        onClick={() => setActiveLink("sf36")}
-      >
-        <BookText width={15} color="gray" className="col-span-1" />
-        <p className="col-span-6">SF-36</p>
-        <ChevronRight
-          width={12}
-          color="gray"
-          className="col-span-1 justify-self-end"
-        />
-      </Link>
+      {links.map((link) => {
+        const paths: Array<string> | string = link.matchPaths || link.to;
+        const isActive = Array.isArray(paths)
+          ? paths.includes(location.pathname)
+          : location.pathname === paths;
+        return (
+          <Link
+            to={link.to}
+            className={`p-2  border-b border-gray-200 grid grid-cols-8 items-center ${
+              isActive && "bg-gray-100"
+            }`}
+            key={link.to}
+          >
+            <BookText width={15} color="gray" className=" col-span-1" />
+            <p className="col-span-6">{link.label}</p>
+            <ChevronRight
+              width={12}
+              color="gray"
+              className="col-span-1 justify-self-end"
+            />
+          </Link>
+        );
+      })}
     </div>
   );
 };

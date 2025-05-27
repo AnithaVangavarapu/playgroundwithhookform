@@ -30,10 +30,7 @@ const DropDown = ({
   classnames,
   placeholder,
 }: Props) => {
-  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
-  //   ? ruleConversion(validation)
-  //   : undefined;
-  // console.log("rules in the dropdown", rules);
+  // console.log("dropdown renderd");
   return (
     <div className={cn(`m-1`, classnames?.div)}>
       {label && (

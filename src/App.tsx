@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { InsulineDairy } from "./pages/InsulineDiary";
 import { StudyDrugDoseDairy } from "./pages/StudyDrugDoseDairy";
 import { Header, SideMenu } from "./components";
+import { HypoglycemiaDiary } from "./pages/HypoglycemiaDiary";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +21,10 @@ function App() {
                   element={<StudyDrugDoseDairy />}
                 />
                 <Route path="/insulineDiary" element={<InsulineDairy />} />
+                <Route
+                  path="/hypoglycemiaDiary"
+                  element={<HypoglycemiaDiary />}
+                />
               </Routes>
             </div>
           </div>

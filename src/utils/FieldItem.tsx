@@ -14,6 +14,7 @@ import {
   type FileUploadField,
   type TextField,
   type TextAreaField,
+  type CheckboxField,
 } from "../types/types";
 import {
   Date,
@@ -22,6 +23,7 @@ import {
   TextInput,
   TextArea,
   Time,
+  CheckboxGroup,
 } from "../commonComponents";
 import React, { useMemo } from "react";
 import { ruleConversion } from "./ruleConversion";
@@ -110,7 +112,18 @@ const FieldItem = ({ fieldItem }: Props) => {
           error={errors[selectField.id]?.message as string}
         />
       );
-
+    case "checkbox":
+      const checkboxField = fieldItem as CheckboxField;
+      return (
+        <CheckboxGroup
+          options={checkboxField.options}
+          label={checkboxField.label}
+          error={errors[checkboxField.id]?.message as string}
+          name={field.name}
+          onChange={field.onChange}
+          placeholder={checkboxField.placeholder}
+        />
+      );
     case "time":
       const timeField = fieldItem as TimeField;
       return (

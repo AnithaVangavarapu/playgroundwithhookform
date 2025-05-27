@@ -3,7 +3,7 @@ import type { VisibilityCondition } from "../types/types";
 // import type { VisibilityCondition } from "../types/types";
 interface Props {
   action: VisibilityCondition["condition"];
-  value: string;
+  value: string | number;
   fieldValue: string;
 }
 
