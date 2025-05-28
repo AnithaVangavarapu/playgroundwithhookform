@@ -5,6 +5,7 @@ import { FormProvider } from "react-hook-form";
 import FieldWrapper from "../../utils/FieldWrapper";
 import { Button } from "../../commonComponents";
 import ConfirmModal from "../../components/ConfirmModal";
+
 const StudyDrugDoseDairy = React.memo(() => {
   const {
     title,
@@ -18,7 +19,7 @@ const StudyDrugDoseDairy = React.memo(() => {
   } = useStudyDrugDoseDairy();
 
   return (
-    <div className="mx-40 p-4">
+    <div className={`mx-40 p-4`}>
       <div className="mb-3 font-bold">{title}</div>
       <FormProvider {...methods}>
         <div className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm">

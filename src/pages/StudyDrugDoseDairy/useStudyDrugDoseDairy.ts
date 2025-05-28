@@ -22,6 +22,15 @@ export const useStudyDrugDoseDairy = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showModal]);
+
   //memorized fields
   const memorizedFields = useMemo(() => {
     return formData?.fields ?? [];
@@ -30,7 +39,6 @@ export const useStudyDrugDoseDairy = () => {
   //submit form
   const handleFormSubmit = (data: Record<string, any>) => {
     console.log(data);
-
     if (formData?.actions) {
       const action = formData.actions?.openForm?.conditions[0].condition;
       const value = formData.actions?.openForm?.conditions[0].value;
@@ -57,6 +65,7 @@ export const useStudyDrugDoseDairy = () => {
     console.log("Validation errors:", errors);
     // alert("errors");
   };
+
   const handleNavigation = () => {
     navigate("/hypoglycemiaDiary");
     setShowModal(false);
@@ -70,7 +79,6 @@ export const useStudyDrugDoseDairy = () => {
     handleFormSubmit,
     handleFormError,
     showModal,
-    setShowModal,
     modalData,
     handleNavigation,
   };

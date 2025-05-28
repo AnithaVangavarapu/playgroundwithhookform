@@ -1,5 +1,5 @@
 import { cn } from "../utils/cn";
-import React from "react";
+import React, { useState } from "react";
 interface ClassNames {
   div?: string;
   label?: string;
@@ -31,6 +31,7 @@ const DropDown = ({
   placeholder,
 }: Props) => {
   // console.log("dropdown renderd");
+  const [selectedValue, setSelectedValue] = useState("");
   return (
     <div className={cn(`m-1`, classnames?.div)}>
       {label && (
@@ -46,11 +47,16 @@ const DropDown = ({
       )}
       <select
         className={cn(
-          `w-full border border-gray-200 rounded-lg p-1.5 text-[10px] text-gray-400 focus:outline-none`,
-          classnames?.select
+          `w-full border border-gray-200 rounded-lg p-1.5 text-[10px] focus:outline-none`,
+          classnames?.select,
+          selectedValue === "" ? "text-gray-400" : ""
         )}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value);
+          setSelectedValue(e.target.value);
+        }}
         name={name}
+        value={selectedValue}
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (

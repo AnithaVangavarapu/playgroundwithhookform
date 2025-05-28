@@ -1,10 +1,5 @@
 import { populateFrom } from "./populateFrom";
-import {
-  useWatch,
-  useController,
-  useFormContext,
-  useFormState,
-} from "react-hook-form";
+import { useWatch, useController, useFormContext } from "react-hook-form";
 import {
   type FormFieldProp,
   type NumberField,
@@ -36,12 +31,16 @@ const FieldItem = ({ fieldItem }: Props) => {
   console.log("render item", fieldItem.id, fieldItem.type);
   const type: string = fieldItem.type;
   const { control, setValue } = useFormContext();
-  const { field } = useController({
+
+  const {
+    field,
+    formState: { errors },
+  } = useController({
     name: fieldItem.id,
     control,
     rules: fieldItem.validation && ruleConversion(fieldItem.validation),
   });
-  const { errors } = useFormState();
+  // const { errors } = useFormState();
 
   const isNumberField =
     fieldItem.type === "number" && fieldItem.valuePopulateFrom;
@@ -121,7 +120,6 @@ const FieldItem = ({ fieldItem }: Props) => {
           error={errors[checkboxField.id]?.message as string}
           name={field.name}
           onChange={field.onChange}
-          placeholder={checkboxField.placeholder}
         />
       );
     case "time":
