@@ -1,12 +1,12 @@
-import { useStudyDrugDoseDairy } from "./useStudyDrugDoseDairy";
+import { useDynamicForm } from "./useDynamicForm";
 import React from "react";
 import { type ColumnLayoutFiled } from "../../types/types";
 import { FormProvider } from "react-hook-form";
-import FieldWrapper from "../../utils/FieldWrapper";
+import { FieldWrapper } from "../../utils/FieldWrapper";
 import { Button } from "../../commonComponents";
 import ConfirmModal from "../../components/ConfirmModal";
 
-const StudyDrugDoseDairy = React.memo(() => {
+const DynamicForm = React.memo(() => {
   const {
     title,
     fields,
@@ -16,13 +16,22 @@ const StudyDrugDoseDairy = React.memo(() => {
     showModal,
     modalData,
     handleNavigation,
-  } = useStudyDrugDoseDairy();
+    formId,
+  } = useDynamicForm();
 
+  if (formId === undefined || fields.length === 0) return null;
+
+  console.log(fields.length);
+  console.log("rendered dynamic form for formId", formId);
   return (
     <div className={`mx-40 p-4`}>
       <div className="mb-3 font-bold">{title}</div>
       <FormProvider {...methods}>
-        <div className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm">
+        <div
+          className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm"
+          id={formId}
+          // onSubmit={methods.handleSubmit(handleFormSubmit, handleFormError)}
+        >
           {fields.map((field) => {
             if (field.type === "columnLayout") {
               const columnLayoutField = field as ColumnLayoutFiled;
@@ -37,18 +46,20 @@ const StudyDrugDoseDairy = React.memo(() => {
                     display: "grid",
                     gridTemplateColumns: columnsWidths,
                   }}
-                  key={field.id}
+                  key={`${formId}_${field.id}`}
                 >
                   {columnLayoutField.items.map((item) => (
-                    <div key={item.id} className="">
-                      <FieldWrapper fieldItem={item} />
+                    <div key={`${formId}_${field.id}_${item.id}`} className="">
+                      <FieldWrapper fieldItem={item} formId={formId} />
                     </div>
                   ))}
                 </div>
               );
             } else {
               return (
-                <div key={field.id}>{<FieldWrapper fieldItem={field} />}</div>
+                <div key={`${formId}_${field.id}`}>
+                  {<FieldWrapper fieldItem={field} formId={formId} />}
+                </div>
               );
             }
           })}
@@ -73,4 +84,4 @@ const StudyDrugDoseDairy = React.memo(() => {
   );
 });
 
-export default StudyDrugDoseDairy;
+export default React.memo(DynamicForm);

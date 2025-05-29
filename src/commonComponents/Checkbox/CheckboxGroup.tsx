@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Checkbox from "./Checkbox";
 // import { ChevronDown, ChevronUp } from "lucide-react";
@@ -33,7 +33,7 @@ const CheckboxGroup = ({
   // console.log("checkboxgroup rendered");
   const [values, setValues] = useState<string[]>([]);
 
-  const ref = useRef<HTMLDivElement>(null);
+  // const ref = useRef<HTMLDivElement>(null);
   const handleData = (value: string) => {
     let newValues: string[];
     if (values.includes(value)) {
@@ -58,25 +58,25 @@ const CheckboxGroup = ({
           {required && <span className="text-red-400">*</span>}
         </label>
       )}
-      <div
+      {/* <div
         className="border rounded-lg text-[10px] text-gray-400 pl-1 py-1 pr-0.5 border-gray-200 "
         ref={ref}
-      >
-        <div className="pt-1 pl-1">
-          {options.map((option: Option, index: number) => {
-            return (
-              <div key={index} className="">
-                <Checkbox
-                  label={option.label}
-                  value={option.value}
-                  updateValue={handleData}
-                  checked={values.includes(option.value)}
-                />
-              </div>
-            );
-          }, [])}
-        </div>
+      > */}
+      <div className="pt-1 pl-1">
+        {options.map((option: Option, index: number) => {
+          return (
+            <div key={index} className="">
+              <Checkbox
+                label={option.label}
+                value={option.value}
+                updateValue={handleData}
+                checked={values.includes(option.value)}
+              />
+            </div>
+          );
+        }, [])}
       </div>
+      {/* </div> */}
 
       {error && (
         <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>

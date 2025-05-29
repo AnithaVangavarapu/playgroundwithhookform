@@ -5,12 +5,12 @@ const SideMenu = () => {
   const location = useLocation();
   const links = [
     {
-      to: "/studyDrugDoseDiary",
+      to: "/dynamicForm/study-drug-dose",
       label: "Study Drug Dose Diary",
-      matchPaths: ["/", "/studyDrugDoseDiary"],
+      matchPaths: ["/", "/dynamicForm/study-drug-dose"],
     },
     { to: "/insulineDiary", label: "Insuline Diary" },
-    { to: "/hypoglycemiaDiary", label: "Hypoglycemia Diary" },
+    { to: "/dynamicForm/hypoglycemia", label: "Hypoglycemia Diary" },
     { to: "/dynamicForm", label: "Dynamic Form" },
     { to: "/sf36", label: "SF-36" },
   ];

@@ -7,7 +7,7 @@ interface ClassNames {
 interface Props {
   label: string;
   type: "button" | "submit";
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   classnames?: ClassNames;
 }
 

@@ -25,10 +25,11 @@ import { ruleConversion } from "./ruleConversion";
 import { DateObject } from "react-multi-date-picker";
 interface Props {
   fieldItem: FormFieldProp;
+  formId: string;
 }
 
-const FieldItem = ({ fieldItem }: Props) => {
-  console.log("render item", fieldItem.id, fieldItem.type);
+const FieldItem = ({ fieldItem, formId }: Props) => {
+  console.log("fielditem renders", fieldItem.id);
   const type: string = fieldItem.type;
   const { control, setValue } = useFormContext();
 
@@ -36,11 +37,10 @@ const FieldItem = ({ fieldItem }: Props) => {
     field,
     formState: { errors },
   } = useController({
-    name: fieldItem.id,
+    name: `${formId}_${fieldItem.id}`,
     control,
     rules: fieldItem.validation && ruleConversion(fieldItem.validation),
   });
-  // const { errors } = useFormState();
 
   const isNumberField =
     fieldItem.type === "number" && fieldItem.valuePopulateFrom;
@@ -49,7 +49,9 @@ const FieldItem = ({ fieldItem }: Props) => {
   const watchedPopulateValues = isNumberField
     ? useWatch({
         control,
-        name: fieldItem.valuePopulateFrom!.fields,
+        name: fieldItem.valuePopulateFrom!.fields.map(
+          (field) => formId + "_" + field
+        ),
       })
     : undefined;
 
@@ -80,7 +82,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={field.name}
           label={datePickerField.label}
           placeholder={datePickerField.placeholder}
-          error={errors[datePickerField.id]?.message as string}
+          error={errors[formId + "_" + datePickerField.id]?.message as string}
           readonly={datePickerField.readOnly}
           value={field.value ? new DateObject(field.value) : null}
         />
@@ -94,7 +96,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={numberField.id}
           label={numberField.label}
           placeholder={numberField.placeholder}
-          error={errors[numberField.id]?.message as string}
+          error={errors[formId + "_" + numberField.id]?.message as string}
           readonly={numberField.readOnly}
           value={field.value || ""}
         />
@@ -108,7 +110,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           onChange={field.onChange}
           name={field.name}
           placeholder={selectField.placeholder}
-          error={errors[selectField.id]?.message as string}
+          error={errors[formId + "_" + selectField.id]?.message as string}
         />
       );
     case "checkbox":
@@ -117,7 +119,7 @@ const FieldItem = ({ fieldItem }: Props) => {
         <CheckboxGroup
           options={checkboxField.options}
           label={checkboxField.label}
-          error={errors[checkboxField.id]?.message as string}
+          error={errors[formId + "_" + checkboxField.id]?.message as string}
           name={field.name}
           onChange={field.onChange}
         />
@@ -130,7 +132,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={field.name}
           label={timeField.label}
           placeholder={timeField.placeholder}
-          error={errors[timeField.id]?.message as string}
+          error={errors[formId + "_" + timeField.id]?.message as string}
           readonly={timeField.readOnly}
         />
       );
@@ -143,7 +145,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={fileUploadField.id}
           label={fileUploadField.label}
           placeholder={fileUploadField.placeholder}
-          error={errors[fileUploadField.id]?.message as string}
+          error={errors[formId + "_" + fileUploadField.id]?.message as string}
           readonly={fileUploadField.readOnly}
         />
       );
@@ -155,7 +157,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={field.name}
           label={textField.label}
           placeholder={textField.placeholder}
-          error={errors[textField.id]?.message as string}
+          error={errors[formId + "_" + textField.id]?.message as string}
           value={field.value || ""}
         />
       );
@@ -167,7 +169,7 @@ const FieldItem = ({ fieldItem }: Props) => {
           name={field.name}
           label={textareaField.label}
           placeholder={textareaField.placeholder}
-          error={errors[textareaField.id]?.message as string}
+          error={errors[formId + "_" + textareaField.id]?.message as string}
           readonly={textareaField.readOnly}
         />
       );

@@ -21,15 +21,15 @@ const Checkbox = ({ label, value, updateValue, checked }: Props) => {
     "
     >
       {isChecked ? (
-        <CheckSquare size={10} color="black" />
+        <CheckSquare size={20} color="black" strokeWidth={2} />
       ) : (
-        <Square size={10} />
+        <Square size={20} color="gray" strokeWidth={1} />
       )}
       <label
         style={{ paddingLeft: "10px" }}
         className={cn(
           "text-[10px]",
-          isChecked ? "text-black" : " text-gray-400"
+          isChecked ? "text-black" : " text-gray-500"
         )}
       >
         {label}

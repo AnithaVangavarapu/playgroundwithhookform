@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { InsulineDairy } from "./pages/InsulineDiary";
-import { StudyDrugDoseDairy } from "./pages/StudyDrugDoseDairy";
+// import { InsulineDairy } from "./pages/InsulineDiary";
+import { DynamicForm } from "./pages/DynamicForm";
 import { Header, SideMenu } from "./components";
-import { HypoglycemiaDiary } from "./pages/HypoglycemiaDiary";
+// import { HypoglycemiaDiary } from "./pages/HypoglycemiaDiary";
 function App() {
   return (
     <BrowserRouter>
@@ -15,16 +15,8 @@ function App() {
             </div>
             <div className="col-span-5 w-full bg-gray-50">
               <Routes>
-                <Route path="/" element={<StudyDrugDoseDairy />} />
-                <Route
-                  path="/studyDrugDoseDiary"
-                  element={<StudyDrugDoseDairy />}
-                />
-                <Route path="/insulineDiary" element={<InsulineDairy />} />
-                <Route
-                  path="/hypoglycemiaDiary"
-                  element={<HypoglycemiaDiary />}
-                />
+                <Route path="/" element={<DynamicForm />} />
+                <Route path="/dynamicForm/:id" element={<DynamicForm />} />
               </Routes>
             </div>
           </div>

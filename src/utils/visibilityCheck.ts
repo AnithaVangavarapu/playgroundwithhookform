@@ -8,20 +8,6 @@ interface Props {
 }
 
 export const visibilityCheck = ({ action, fieldValue, value }: Props) => {
-  // const field = condition.field;
-  // const action = condition.condition;
-  // const value = condition.value;
-  // console.log("fieldValue", fieldValue);
-  // const fieldvalue = fieldValue;
-  // console.log(
-  //   "typeof value",
-  //   typeof value,
-  //   "typeof fieldvalue",
-  //   fieldvalue,
-  //   "fieldvalue",
-  //   fieldvalue
-  // );
-
   switch (action) {
     case "equals":
       return fieldValue === value;
