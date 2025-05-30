@@ -1,9 +1,9 @@
 import { useForm, type FieldErrors } from "react-hook-form";
 import { type FormDataProps } from "../../types/types";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { visibilityCheck } from "../../utils/visibilityCheck";
 import { useNavigate, useParams } from "react-router-dom";
-
+import isEqual from "lodash/isEqual";
 export const useDynamicForm = () => {
   const methods = useForm<Record<string, any>>();
   const [formData, setFormData] = useState<FormDataProps | null>(null);
@@ -12,49 +12,46 @@ export const useDynamicForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   console.log("id", id);
-  const prevFormIdRef = useRef<string | null>(null);
+
+  //import json data based on id
+  const importJson = async (id: string | undefined) => {
+    let res;
+    let data: FormDataProps;
+    switch (id) {
+      case undefined:
+      case "study-drug-dose":
+        res = await import("../../data/data.json");
+        data = res.default as FormDataProps;
+        return data;
+      case "hypoglycemia":
+        res = await import("../../data/hypoglycemiaDiary.json");
+        data = res.default as FormDataProps;
+        return data;
+      default:
+        return null;
+    }
+  };
 
   //fetch data
   useEffect(() => {
-    methods.unregister();
-    methods.reset();
-    if (id === undefined || id === "study-drug-dose") {
-      fetch("/data/data.json")
-        .then((res) => res.json())
-        .then((data: FormDataProps) => {
-          if (JSON.stringify(data) !== JSON.stringify(formData))
-            setFormData(data);
-        })
-        .catch((error) => {
-          console.log(error);
-          setFormData(null);
-        });
-    } else if (id === "hypoglycemia") {
-      fetch("/data/hypoglycemiaDiary.json")
-        .then((res) => res.json())
-        .then((data: FormDataProps) => {
-          if (JSON.stringify(data) !== JSON.stringify(formData))
-            setFormData(data);
-        })
-        .catch((error) => {
-          console.log(error);
-          setFormData(null);
-        });
-    } else {
-      setFormData(null);
-    }
+    const fetchData = async () => {
+      const data = await importJson(id);
+      // console.log(data);
+      if (data) {
+        if (!isEqual(data, formData)) {
+          methods.unregister();
+          methods.reset();
+          setFormData(data);
+        }
+      }
+    };
+    fetchData();
   }, [id]);
 
   //memorized fields
   const memorizedFields = useMemo(() => {
     return formData?.fields ?? [];
   }, [formData]);
-
-  useEffect(() => {
-    if (!formData?.formId || prevFormIdRef.current === formData.formId) return;
-    methods.reset();
-    prevFormIdRef.current = formData.formId;
-  }, [formData?.formId]);
 
   //submit form
   const handleFormSubmit = (data: Record<string, any>) => {
@@ -95,7 +92,6 @@ export const useDynamicForm = () => {
   };
 
   const handleNavigation = () => {
-    // setFormData(null);
     setShowModal(false);
     setModalData("");
     document.body.style.overflow = "unset";

@@ -1,4 +1,4 @@
-import { CheckSquare, Square } from "lucide-react";
+import { Square, SquareCheck } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
 interface Props {
@@ -21,14 +21,14 @@ const Checkbox = ({ label, value, updateValue, checked }: Props) => {
     "
     >
       {isChecked ? (
-        <CheckSquare size={20} color="black" strokeWidth={2} />
+        <SquareCheck size={24} color="black" />
       ) : (
-        <Square size={20} color="gray" strokeWidth={1} />
+        <Square size={24} color="gray" strokeWidth={1} />
       )}
       <label
         style={{ paddingLeft: "10px" }}
         className={cn(
-          "text-[10px]",
+          "text-[12px]",
           isChecked ? "text-black" : " text-gray-500"
         )}
       >

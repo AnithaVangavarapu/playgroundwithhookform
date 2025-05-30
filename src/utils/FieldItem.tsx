@@ -9,8 +9,8 @@ import {
   type FileUploadField,
   type TextField,
   type TextAreaField,
-  type CheckboxField,
 } from "../types/types";
+import { type CheckboxField } from "../types/types";
 import {
   Date,
   DropDown,

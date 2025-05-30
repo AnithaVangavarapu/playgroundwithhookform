@@ -4,7 +4,7 @@ export interface SelectOption {
 }
 export interface RequiredValidation {
   value: boolean;
-  message: boolean;
+  message: string;
 }
 export interface RangeValidation {
   min: number | string;
@@ -64,6 +64,10 @@ export interface ColumnLayoutFiled extends BaseField {
   columnWidthRatio: string;
   items: FormFieldProp[];
 }
+export interface CheckboxField extends BaseField {
+  type: "checkbox";
+  options: SelectOption[];
+}
 export interface TextField extends BaseField {
   type: "text";
 }
@@ -84,10 +88,7 @@ export interface NumberField extends BaseField {
 export interface FileUploadField extends BaseField {
   type: "fileUpload";
 }
-export interface CheckboxField extends BaseField {
-  type: "checkbox";
-  options: SelectOption[];
-}
+
 export type FormFieldProp =
   | DateField
   | TimeField
@@ -96,7 +97,8 @@ export type FormFieldProp =
   | NumberField
   | SelectField
   | FileUploadField
-  | ColumnLayoutFiled;
+  | ColumnLayoutFiled
+  | CheckboxField;
 
 export interface ActionCondition {
   field: string;
