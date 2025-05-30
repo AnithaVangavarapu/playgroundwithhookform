@@ -30,7 +30,6 @@ const DropDown = ({
   classnames,
   placeholder,
 }: Props) => {
-  // console.log("dropdown renderd");
   const [selectedValue, setSelectedValue] = useState("");
   return (
     <div className={cn(`m-1`, classnames?.div)}>

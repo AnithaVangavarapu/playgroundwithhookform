@@ -36,7 +36,6 @@ export const useDynamicForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await importJson(id);
-      // console.log(data);
       if (data) {
         if (!isEqual(data, formData)) {
           methods.unregister();
@@ -55,18 +54,14 @@ export const useDynamicForm = () => {
 
   //submit form
   const handleFormSubmit = (data: Record<string, any>) => {
-    console.log("data for the form", formData?.formId);
+    console.log("submitted data for the form", formData?.formId);
     console.log(data);
 
     if (formData?.actions) {
       const action = formData.actions?.openForm?.conditions[0].condition;
       const value = formData.actions?.openForm?.conditions[0].value;
       const fieldValue = formData.actions?.openForm?.conditions[0].field
-        ? data[
-            formData.formId +
-              "_" +
-              formData.actions?.openForm?.conditions[0].field
-          ]
+        ? data[formData.actions?.openForm?.conditions[0].field]
         : undefined;
       if (action && value && fieldValue) {
         const visible = visibilityCheck({

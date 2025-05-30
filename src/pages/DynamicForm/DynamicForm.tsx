@@ -20,9 +20,8 @@ const DynamicForm = React.memo(() => {
   } = useDynamicForm();
 
   if (formId === undefined || fields.length === 0) return null;
-
-  console.log(fields.length);
   console.log("rendered dynamic form for formId", formId);
+
   return (
     <div className={`mx-40 p-4`}>
       <div className="mb-3 font-bold">{title}</div>
@@ -30,7 +29,6 @@ const DynamicForm = React.memo(() => {
         <div
           className="border rounded-lg border-gray-200 bg-white p-2 shadow-sm"
           id={formId}
-          // onSubmit={methods.handleSubmit(handleFormSubmit, handleFormError)}
         >
           {fields.map((field) => {
             if (field.type === "columnLayout") {
@@ -46,20 +44,18 @@ const DynamicForm = React.memo(() => {
                     display: "grid",
                     gridTemplateColumns: columnsWidths,
                   }}
-                  key={`${formId}_${field.id}`}
+                  key={field.id}
                 >
                   {columnLayoutField.items.map((item) => (
-                    <div key={`${formId}_${field.id}_${item.id}`} className="">
-                      <FieldWrapper fieldItem={item} formId={formId} />
+                    <div key={item.id} className="">
+                      <FieldWrapper fieldItem={item} />
                     </div>
                   ))}
                 </div>
               );
             } else {
               return (
-                <div key={`${formId}_${field.id}`}>
-                  {<FieldWrapper fieldItem={field} formId={formId} />}
-                </div>
+                <div key={field.id}>{<FieldWrapper fieldItem={field} />}</div>
               );
             }
           })}

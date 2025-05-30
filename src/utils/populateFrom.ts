@@ -1,13 +1,16 @@
 import { type ValuePopulateFrom } from "../types/types";
-export const populateFrom = (
-  populateFormValues: ValuePopulateFrom,
-  formStateData: Array<string>
-) => {
-  const type = populateFormValues.type;
-  const formulaType = populateFormValues.formulaType;
-  // const fields = populateFormValues.fields;
-  const defaultValue = populateFormValues.default;
-
+interface Props {
+  type: ValuePopulateFrom["type"];
+  formulaType: ValuePopulateFrom["formulaType"];
+  defaultValue: ValuePopulateFrom["default"];
+  formStateData: Array<string>;
+}
+export const populateFrom = ({
+  type,
+  formulaType,
+  formStateData,
+  defaultValue,
+}: Props) => {
   if (type === "formula") {
     switch (formulaType) {
       case "multiply":

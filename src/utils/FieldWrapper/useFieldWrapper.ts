@@ -2,14 +2,14 @@ import type { FormFieldProp } from "../../types/types";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useMemo } from "react";
 import { visibilityCheck } from "../visibilityCheck";
-export const useFieldWrapper = (fieldItem: FormFieldProp, formId: string) => {
+export const useFieldWrapper = (fieldItem: FormFieldProp) => {
   if (!fieldItem.visibilityDependsOn) return true;
   const { control } = useFormContext();
   //watch value for visibility field
   const watchedValue = fieldItem.visibilityDependsOn
     ? useWatch({
         control,
-        name: formId + "_" + fieldItem.visibilityDependsOn.field,
+        name: fieldItem.visibilityDependsOn.field,
       })
     : undefined;
   //check to render item

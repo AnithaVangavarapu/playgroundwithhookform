@@ -4,16 +4,14 @@ import type { FormFieldProp } from "../../types/types";
 import React from "react";
 interface Props {
   fieldItem: FormFieldProp;
-  formId: string;
 }
-const FieldWrapper = ({ fieldItem, formId }: Props) => {
-  // console.log("Field wrapper for", fieldItem.id);
-  const isvisible = useFieldWrapper(fieldItem, formId);
+const FieldWrapper = ({ fieldItem }: Props) => {
+  const isvisible = useFieldWrapper(fieldItem);
   if (!isvisible) return null;
-  // console.log("Field wrapper renders field item for", fieldItem.id);
+
   return (
     <div>
-      <FieldItem fieldItem={fieldItem} formId={formId} />
+      <FieldItem fieldItem={fieldItem} />
     </div>
   );
 };

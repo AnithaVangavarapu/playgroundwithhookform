@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Checkbox from "./Checkbox";
-// import { ChevronDown, ChevronUp } from "lucide-react";
+
 interface ClassNames {
   div?: string;
   label?: string;
@@ -30,10 +30,8 @@ const CheckboxGroup = ({
   required,
   classnames,
 }: Props) => {
-  // console.log("checkboxgroup rendered");
   const [values, setValues] = useState<string[]>([]);
 
-  // const ref = useRef<HTMLDivElement>(null);
   const handleData = (value: string) => {
     let newValues: string[];
     if (values.includes(value)) {
@@ -58,10 +56,6 @@ const CheckboxGroup = ({
           {required && <span className="text-red-400">*</span>}
         </label>
       )}
-      {/* <div
-        className="border rounded-lg text-[10px] text-gray-400 pl-1 py-1 pr-0.5 border-gray-200 "
-        ref={ref}
-      > */}
       <div className="pt-1 pl-1">
         {options.map((option: Option, index: number) => {
           return (
@@ -76,7 +70,6 @@ const CheckboxGroup = ({
           );
         }, [])}
       </div>
-      {/* </div> */}
 
       {error && (
         <p className={cn(`text-red-400 text-[10px]`, classnames?.error)}>

@@ -1,9 +1,9 @@
 import { type Validation } from "../types/types";
 export const ruleConversion = (validation: Validation) => {
-  // console.log("validation fields", validation);
   let rules: Record<string, any> = {};
   rules.validate = {};
   const customArray = Object.entries(validation);
+
   if (customArray.length === 0) {
     return {};
   } else {
@@ -15,8 +15,6 @@ export const ruleConversion = (validation: Validation) => {
       }
 
       if (key === "lessThan") {
-        // console.log("===lessThan key found, value:", value.value);
-        // console.log("=== message", value.message);
         if (value.value === "today") {
           const currentDate = new Date();
           rules.validate = {

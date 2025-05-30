@@ -22,10 +22,6 @@ const Time = ({
   required,
   onChange,
 }: Props) => {
-  // const rules: RegisterOptions<T, Path<T>> | undefined = validation
-  //   ? ruleConversion(validation)
-  //   : undefined;
-  // console.log("rules in time", rules);
   return (
     <div className={cn("m-1")}>
       {label && (
