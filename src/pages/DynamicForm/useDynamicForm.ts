@@ -13,20 +13,14 @@ export const useDynamicForm = () => {
   const { id } = useParams();
   console.log("id", id);
 
-  //import json data based on id
-  const importJson = async (id: string | undefined) => {
-    let res;
-    let data: FormDataProps;
+  //return jsonpath based on id
+  const jsonPath = async (id: string | undefined) => {
     switch (id) {
       case undefined:
       case "study-drug-dose":
-        res = await import("../../data/data.json");
-        data = res.default as FormDataProps;
-        return data;
+        return "../../data/data.json";
       case "hypoglycemia":
-        res = await import("../../data/hypoglycemiaDiary.json");
-        data = res.default as FormDataProps;
-        return data;
+        return "../../data/hypoglycemiaDiary.json";
       default:
         return null;
     }
@@ -35,12 +29,18 @@ export const useDynamicForm = () => {
   //fetch data
   useEffect(() => {
     const fetchData = async () => {
-      const data = await importJson(id);
-      if (data) {
-        if (!isEqual(data, formData)) {
-          methods.unregister();
-          methods.reset();
-          setFormData(data);
+      const path: string | null = await jsonPath(id);
+      if (path) {
+        const res = await import(path);
+        const data: FormDataProps = res.default;
+        if (data) {
+          if (!isEqual(data, formData)) {
+            methods.unregister();
+            methods.reset();
+            setFormData(data);
+          }
+        } else {
+          setFormData(null);
         }
       }
     };
